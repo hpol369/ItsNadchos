@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google"; // Outfit is perfect for the "streamer" aesthetic
+import { Quicksand, Fredoka } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const quicksand = Quicksand({
+  variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
 });
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const fredoka = Fredoka({
+  variable: "--font-display",
   subsets: ["latin"],
   display: "swap",
+  weight: ["600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -26,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${outfit.variable} antialiased`}>
+      <body className={`${quicksand.variable} ${fredoka.variable} antialiased`}>
         {children}
       </body>
     </html>

@@ -13,9 +13,6 @@
   --color-glass-surface: rgba(255, 255, 255, 0.6);
   --color-glass-border: rgba(255, 182, 200, 0.5);
 
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-outfit);
-
   /* Spacing */
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
