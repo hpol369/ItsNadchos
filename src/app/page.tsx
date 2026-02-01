@@ -35,7 +35,7 @@ export default function Home() {
         <div className={styles.heroContent}>
           <h1 className={styles.title}>ItsNadchos</h1>
           <p className={styles.tagline}>
-            don't hate the game, hate the <span>player</span>
+            don't love the game, love the <span>player</span>
           </p>
         </div>
 
