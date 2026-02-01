@@ -64,10 +64,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 2rem 1rem;
   position: relative;
   z-index: 1;
+  gap: 1rem;
 }
 
 .heroContent {
@@ -102,18 +103,17 @@
 }
 
 .heroImageWrapper {
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 1rem 0;
+  flex: 1;
 }
 
 .heroImage {
   height: auto;
   width: auto;
-  max-height: 45vh;
-  max-width: 90vw;
+  max-height: 55vh;
+  max-width: 80vw;
   object-fit: contain;
   filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
   animation: gentleFloat 6s ease-in-out infinite;
@@ -315,7 +315,7 @@
   }
 
   .heroImage {
-    max-height: 40vh;
+    max-height: 45vh;
   }
 
   .heroCTA {
