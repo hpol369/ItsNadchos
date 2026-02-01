@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Play, Heart, MessageCircle, ArrowRight } from "lucide-react";
+import { Heart, MessageCircle, ArrowRight } from "lucide-react";
 import { FaInstagram, FaTiktok, FaTelegram } from "react-icons/fa";
 import { SiKick } from "react-icons/si";
 import styles from "./page.module.css";
@@ -10,7 +10,7 @@ import styles from "./page.module.css";
 export default function Home() {
   const [showToast, setShowToast] = useState(false);
 
-  const handleLinkClick = (e: React.MouseEvent) => {
+  const handleComingSoon = (e: React.MouseEvent) => {
     e.preventDefault();
     setShowToast(true);
     setTimeout(() => setShowToast(false), 2000);
@@ -20,31 +20,26 @@ export default function Home() {
     <main className={styles.main}>
       {/* Toast Notification */}
       <div className={`${styles.toast} ${showToast ? styles.showToast : ''}`}>
-        Coming soon 💋
+        Coming soon
       </div>
 
       {/* Floating Bubbles */}
       <div className={styles.bubbles}>
-        <div className={styles.bubble}></div>
-        <div className={styles.bubble}></div>
-        <div className={styles.bubble}></div>
-        <div className={styles.bubble}></div>
-        <div className={styles.bubble}></div>
-        <div className={styles.bubble}></div>
-        <div className={styles.bubble}></div>
-        <div className={styles.bubble}></div>
+        {[...Array(8)].map((_, i) => (
+          <div key={i} className={styles.bubble}></div>
+        ))}
       </div>
 
-      {/*
-        HERO SECTION
-      */}
+      {/* HERO SECTION */}
       <section className={styles.hero}>
+        <div className={styles.heroContent}>
+          <h1 className={styles.title}>ItsNadchos</h1>
+          <p className={styles.tagline}>
+            Confident. Playful. <span>Yours.</span>
+          </p>
+        </div>
 
-        {/* Layer 1: Ambient Background */}
-        <div className={styles.heroBackground} />
-
-        {/* Layer 2: The Girl (Cutout) */}
-        <div className={styles.heroImageContainer}>
+        <div className={styles.heroImageWrapper}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/photos/hero.png"
@@ -53,150 +48,105 @@ export default function Home() {
           />
         </div>
 
-        {/* Layer 3: Title at TOP */}
-        <div className={styles.heroContent}>
-          <h1 className={styles.title}>
-            ItsNadchos
-          </h1>
-          <p className={styles.tagline}>
-            Confident. Playful. <span>Yours.</span>
+        <div className={styles.heroCTA}>
+          <Link href="#" onClick={handleComingSoon} className={styles.btnPrimary}>
+            <MessageCircle size={20} />
+            Come say Hi!
+          </Link>
+          <Link href="https://kick.com/itsnadchos" target="_blank" className={styles.btnSecondary}>
+            <SiKick size={20} />
+            Watch Stream
+          </Link>
+        </div>
+      </section>
+
+      {/* GALLERY SECTION - Floating Photos */}
+      <section className={styles.gallerySection}>
+        <h2 className={styles.sectionTitle}>Visuals</h2>
+
+        <div className={styles.floatingGallery}>
+          <div className={`${styles.floatingPhoto} ${styles.photo1}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/photos/photo1.png" alt="Nadchos" />
+          </div>
+          <div className={`${styles.floatingPhoto} ${styles.photo2}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/photos/photo3.png" alt="Nadchos" />
+          </div>
+          <div className={`${styles.floatingPhoto} ${styles.photo3}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/photos/photo4.png" alt="Nadchos" />
+          </div>
+          <div className={`${styles.floatingPhoto} ${styles.photo4}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/photos/photo5.png" alt="Nadchos" />
+          </div>
+        </div>
+      </section>
+
+      {/* CONNECT SECTION */}
+      <section className={styles.connectSection}>
+        <h2 className={styles.sectionTitle}>Connect</h2>
+
+        <div className={styles.linkCards}>
+          <Link href="#" onClick={handleComingSoon} className={styles.linkCard}>
+            <FaTelegram size={28} />
+            <div>
+              <span className={styles.linkTitle}>Telegram</span>
+              <span className={styles.linkSub}>Say hi directly!</span>
+            </div>
+            <ArrowRight size={20} />
+          </Link>
+
+          <Link href="https://kick.com/itsnadchos" target="_blank" className={styles.linkCard}>
+            <SiKick size={28} />
+            <div>
+              <span className={styles.linkTitle}>Kick</span>
+              <span className={styles.linkSub}>@ItsNadchos</span>
+            </div>
+            <ArrowRight size={20} />
+          </Link>
+
+          <Link href="https://instagram.com/itsnadchos" target="_blank" className={styles.linkCard}>
+            <FaInstagram size={28} />
+            <div>
+              <span className={styles.linkTitle}>Instagram</span>
+              <span className={styles.linkSub}>@itsnadchos</span>
+            </div>
+            <ArrowRight size={20} />
+          </Link>
+
+          <Link href="https://tiktok.com/@itsnadchos" target="_blank" className={styles.linkCard}>
+            <FaTiktok size={28} />
+            <div>
+              <span className={styles.linkTitle}>TikTok</span>
+              <span className={styles.linkSub}>@itsnadchos</span>
+            </div>
+            <ArrowRight size={20} />
+          </Link>
+        </div>
+      </section>
+
+      {/* QUOTE SECTION */}
+      <section className={styles.quoteSection}>
+        <div className={styles.quoteCard}>
+          <p>
+            "It's not just about the game, it's about the <span>vibes</span> we create together."
           </p>
-        </div>
-
-        {/* Layer 4: Buttons at BOTTOM */}
-        <div className={styles.buttonContainer}>
-          <div className={styles.buttonGroup}>
-            <Link
-              href="#"
-              onClick={handleLinkClick}
-              className={styles.btnPrimary}
-            >
-              <MessageCircle size={20} fill="currentColor" />
-              Come say Hi to me!
-            </Link>
-
-            <Link
-              href="https://kick.com/itsnadchos"
-              target="_blank"
-              className={styles.btnSecondary}
-            >
-              <SiKick size={20} />
-              Watch My Stream
-            </Link>
-          </div>
+          <Heart className={styles.heartIcon} size={28} fill="currentColor" />
         </div>
       </section>
 
-      {/*
-        VISUAL GALLERY
-      */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>
-          ✨ Visuals ✨
-        </h2>
-
-        <div className={styles.galleryGrid}>
-          {/* Item 1 - Large vertical */}
-          <div className={`${styles.galleryItem} ${styles.galleryItemLarge}`}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/photos/photo2.jpg"
-              alt="Nadchos - Lace dress"
-              className={styles.galleryImage}
-            />
-          </div>
-
-          {/* Item 2 */}
-          <div className={styles.galleryItem}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/photos/photo1.jpg"
-              alt="Nadchos - Black bodysuit"
-              className={styles.galleryImage}
-            />
-          </div>
-
-          {/* Item 3 */}
-          <div className={styles.galleryItem}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/photos/photo3.jpg"
-              alt="Nadchos - Cowgirl style"
-              className={styles.galleryImage}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/*
-        LINKS / ACTIONS
-      */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>
-          💖 Connect 💖
-        </h2>
-        <div className={styles.actions}>
-          <Link href="#" onClick={handleLinkClick} className={styles.actionCard}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <MessageCircle className={styles.actionIcon} />
-              <div>
-                <div className={styles.actionTitle}>Telegram Channel</div>
-                <div className={styles.actionSubtitle}>Come say hi to me directly!</div>
-              </div>
-            </div>
-            <ArrowRight size={20} className={styles.actionIcon} />
-          </Link>
-
-          <Link href="https://kick.com/itsnadchos" target="_blank" className={styles.actionCard}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <SiKick className={styles.actionIcon} size={24} />
-              <div>
-                <div className={styles.actionTitle}>Kick Stream</div>
-                <div className={styles.actionSubtitle}>@ItsNadchos</div>
-              </div>
-            </div>
-            <ArrowRight size={20} className={styles.actionIcon} />
-          </Link>
-
-          <Link href="https://instagram.com/itsnadchos" target="_blank" className={styles.actionCard}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <FaInstagram className={styles.actionIcon} size={24} />
-              <div>
-                <div className={styles.actionTitle}>Instagram</div>
-                <div className={styles.actionSubtitle}>@itsnadchos</div>
-              </div>
-            </div>
-            <ArrowRight size={20} className={styles.actionIcon} />
-          </Link>
-        </div>
-      </section>
-
-      {/*
-        PERSONALITY
-      */}
-      <section className={styles.section}>
-        <div className={styles.personality}>
-          <p className={styles.personalityText}>
-            "It's not just about the game, it's about the <span>vibes</span> we create together.
-            Come say hi, don't be shy."
-          </p>
-          <Heart className={`${styles.heartIcon} animate-heartbeat`} size={32} fill="currentColor" />
-        </div>
-      </section>
-
-      {/*
-        FOOTER
-      */}
+      {/* FOOTER */}
       <footer className={styles.footer}>
-        <div className={styles.socials}>
-          <Link href="https://kick.com/itsnadchos" target="_blank" className={styles.socialIcon}><SiKick size={20} /></Link>
-          <Link href="#" onClick={handleLinkClick} className={styles.socialIcon}><FaTelegram size={20} /></Link>
-          <Link href="https://instagram.com/itsnadchos" target="_blank" className={styles.socialIcon}><FaInstagram size={20} /></Link>
-          <Link href="https://tiktok.com/@itsnadchos" target="_blank" className={styles.socialIcon}><FaTiktok size={20} /></Link>
+        <div className={styles.footerSocials}>
+          <Link href="https://kick.com/itsnadchos" target="_blank"><SiKick size={22} /></Link>
+          <Link href="#" onClick={handleComingSoon}><FaTelegram size={22} /></Link>
+          <Link href="https://instagram.com/itsnadchos" target="_blank"><FaInstagram size={22} /></Link>
+          <Link href="https://tiktok.com/@itsnadchos" target="_blank"><FaTiktok size={22} /></Link>
         </div>
         <p>© 2025 ItsNadchos</p>
       </footer>
-
     </main>
   );
 }
