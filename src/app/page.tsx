@@ -89,38 +89,40 @@ export default function Home() {
         <h2 className={styles.sectionTitle}>Connect</h2>
 
         <div className={styles.linkCards}>
-          <Link href="#" onClick={handleComingSoon} className={styles.linkCard}>
+          <div className={styles.topRow}>
+            <Link href="https://tiktok.com/@itsnadchos" target="_blank" className={styles.linkCard}>
+              <FaTiktok size={28} />
+              <div>
+                <span className={styles.linkTitle}>TikTok</span>
+                <span className={styles.linkSub}>@itsnadchos</span>
+              </div>
+              <ArrowRight size={20} />
+            </Link>
+
+            <Link href="https://kick.com/itsnadchos" target="_blank" className={styles.linkCard}>
+              <SiKick size={28} />
+              <div>
+                <span className={styles.linkTitle}>Kick</span>
+                <span className={styles.linkSub}>@ItsNadchos</span>
+              </div>
+              <ArrowRight size={20} />
+            </Link>
+
+            <Link href="https://instagram.com/itsnadchos" target="_blank" className={styles.linkCard}>
+              <FaInstagram size={28} />
+              <div>
+                <span className={styles.linkTitle}>Instagram</span>
+                <span className={styles.linkSub}>@itsnadchos</span>
+              </div>
+              <ArrowRight size={20} />
+            </Link>
+          </div>
+
+          <Link href="#" onClick={handleComingSoon} className={`${styles.linkCard} ${styles.telegramCard}`}>
             <FaTelegram size={28} />
             <div>
               <span className={styles.linkTitle}>Telegram</span>
-              <span className={styles.linkSub}>Say hi directly!</span>
-            </div>
-            <ArrowRight size={20} />
-          </Link>
-
-          <Link href="https://kick.com/itsnadchos" target="_blank" className={styles.linkCard}>
-            <SiKick size={28} />
-            <div>
-              <span className={styles.linkTitle}>Kick</span>
-              <span className={styles.linkSub}>@ItsNadchos</span>
-            </div>
-            <ArrowRight size={20} />
-          </Link>
-
-          <Link href="https://instagram.com/itsnadchos" target="_blank" className={styles.linkCard}>
-            <FaInstagram size={28} />
-            <div>
-              <span className={styles.linkTitle}>Instagram</span>
-              <span className={styles.linkSub}>@itsnadchos</span>
-            </div>
-            <ArrowRight size={20} />
-          </Link>
-
-          <Link href="https://tiktok.com/@itsnadchos" target="_blank" className={styles.linkCard}>
-            <FaTiktok size={28} />
-            <div>
-              <span className={styles.linkTitle}>TikTok</span>
-              <span className={styles.linkSub}>@itsnadchos</span>
+              <span className={styles.linkSub}>Say hi to me directly!</span>
             </div>
             <ArrowRight size={20} />
           </Link>
