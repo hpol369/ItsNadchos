@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Play, Heart, MessageCircle, ArrowRight } from "lucide-react";
-import { FaTwitter, FaInstagram, FaTiktok } from "react-icons/fa";
+import { FaInstagram, FaTiktok, FaTelegram } from "react-icons/fa";
+import { SiKick } from "react-icons/si";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -50,19 +51,19 @@ export default function Home() {
         <div className={styles.buttonContainer}>
           <div className={styles.buttonGroup}>
             <Link
-              href="#live"
+              href="https://t.me/your_telegram"
               className={styles.btnPrimary}
             >
-              <Play size={20} fill="currentColor" />
-              Watch Me Live
+              <MessageCircle size={20} fill="currentColor" />
+              Come say Hi to me!
             </Link>
 
             <Link
-              href="#community"
+              href="https://kick.com/your_channel"
               className={styles.btnSecondary}
             >
-              <Heart size={20} fill="currentColor" />
-              Join Community
+              <SiKick size={20} />
+              Watch My Stream
             </Link>
           </div>
         </div>
@@ -117,23 +118,23 @@ export default function Home() {
           💖 Connect 💖
         </h2>
         <div className={styles.actions}>
-          <Link href="#" className={styles.actionCard}>
+          <Link href="https://t.me/your_telegram" className={styles.actionCard}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <Play className={styles.actionIcon} />
+              <MessageCircle className={styles.actionIcon} />
               <div>
-                <div className={styles.actionTitle}>Twitch Stream</div>
-                <div className={styles.actionSubtitle}>Live every mon, wed, fri</div>
+                <div className={styles.actionTitle}>Telegram Channel</div>
+                <div className={styles.actionSubtitle}>Come say hi to me directly!</div>
               </div>
             </div>
             <ArrowRight size={20} className={styles.actionIcon} />
           </Link>
 
-          <Link href="#" className={styles.actionCard}>
+          <Link href="https://kick.com/your_channel" className={styles.actionCard}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <MessageCircle className={styles.actionIcon} />
+              <SiKick className={styles.actionIcon} size={24} />
               <div>
-                <div className={styles.actionTitle}>Discord Community</div>
-                <div className={styles.actionSubtitle}>Join the inner circle</div>
+                <div className={styles.actionTitle}>Kick Stream</div>
+                <div className={styles.actionSubtitle}>Watch me live!</div>
               </div>
             </div>
             <ArrowRight size={20} className={styles.actionIcon} />
@@ -170,7 +171,8 @@ export default function Home() {
       */}
       <footer className={styles.footer}>
         <div className={styles.socials}>
-          <Link href="#" className={styles.socialIcon}><FaTwitter size={20} /></Link>
+          <Link href="https://kick.com/your_channel" className={styles.socialIcon}><SiKick size={20} /></Link>
+          <Link href="https://t.me/your_telegram" className={styles.socialIcon}><FaTelegram size={20} /></Link>
           <Link href="#" className={styles.socialIcon}><FaInstagram size={20} /></Link>
           <Link href="#" className={styles.socialIcon}><FaTiktok size={20} /></Link>
         </div>
