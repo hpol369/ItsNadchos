@@ -71,15 +71,7 @@ export default function Home() {
           </div>
           <div className={`${styles.floatingPhoto} ${styles.photo2}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/photos/photo3.png" alt="Nadchos" />
-          </div>
-          <div className={`${styles.floatingPhoto} ${styles.photo3}`}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/photos/photo4.png" alt="Nadchos" />
-          </div>
-          <div className={`${styles.floatingPhoto} ${styles.photo4}`}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/photos/photo5.png" alt="Nadchos" />
+            <img src="/photos/photo2.png" alt="Nadchos" />
           </div>
         </div>
       </section>
