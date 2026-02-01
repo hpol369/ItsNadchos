@@ -293,6 +293,94 @@
   }
 }
 
+/* ========================================
+   MOBILE RESPONSIVE
+   ======================================== */
+@media (max-width: 600px) {
+  .hero {
+    padding: 1.5rem 1rem;
+    min-height: 100svh;
+  }
+
+  .heroContent {
+    padding-top: 1rem;
+  }
+
+  .title {
+    font-size: 3rem;
+  }
+
+  .tagline {
+    font-size: 1rem;
+  }
+
+  .heroImage {
+    max-height: 40vh;
+  }
+
+  .heroCTA {
+    flex-direction: column;
+    width: 100%;
+    padding: 0 1rem 1.5rem;
+  }
+
+  .btnPrimary,
+  .btnSecondary {
+    width: 100%;
+    justify-content: center;
+    padding: 1rem 1.5rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .gallerySection,
+  .connectSection,
+  .quoteSection {
+    padding: 3rem 1rem;
+  }
+
+  .floatingPhoto img {
+    max-height: 280px;
+  }
+
+  .linkCard {
+    padding: 1rem 1.25rem;
+  }
+
+  .linkTitle {
+    font-size: 1rem;
+  }
+
+  .linkSub {
+    font-size: 0.8rem;
+  }
+
+  .quoteCard {
+    padding: 2rem 1.5rem;
+  }
+
+  .quoteCard p {
+    font-size: 1.1rem;
+  }
+
+  .footer {
+    padding: 2rem 1rem;
+  }
+
+  .footerSocials {
+    gap: 1rem;
+  }
+
+  .toast {
+    padding: 0.875rem 2rem;
+    font-size: 0.9rem;
+    bottom: 1rem;
+  }
+}
+
 .linkCard {
   display: flex;
   align-items: center;
