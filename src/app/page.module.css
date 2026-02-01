@@ -348,8 +348,12 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: top;
+    object-position: center;
     transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.galleryItemLarge .galleryImage {
+    object-position: top;
 }
 
 .galleryItem:hover .galleryImage {
