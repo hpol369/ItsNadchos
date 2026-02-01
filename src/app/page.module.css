@@ -91,7 +91,7 @@
 
 .tagline {
   font-size: clamp(1rem, 3vw, 1.5rem);
-  color: #666;
+  color: rgba(255, 255, 255, 0.85);
   margin-top: 0.5rem;
   font-weight: 500;
 }
@@ -112,8 +112,8 @@
 .heroImage {
   height: auto;
   width: auto;
-  max-height: 55vh;
-  max-width: 80vw;
+  max-height: 50vh;
+  max-width: 70vw;
   object-fit: contain;
   filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
   animation: gentleFloat 6s ease-in-out infinite;
