@@ -76,8 +76,8 @@ export default function Home() {
             </Link>
 
             <Link
-              href="#"
-              onClick={handleLinkClick}
+              href="https://kick.com/itsnadchos"
+              target="_blank"
               className={styles.btnSecondary}
             >
               <SiKick size={20} />
@@ -147,23 +147,23 @@ export default function Home() {
             <ArrowRight size={20} className={styles.actionIcon} />
           </Link>
 
-          <Link href="#" onClick={handleLinkClick} className={styles.actionCard}>
+          <Link href="https://kick.com/itsnadchos" target="_blank" className={styles.actionCard}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <SiKick className={styles.actionIcon} size={24} />
               <div>
                 <div className={styles.actionTitle}>Kick Stream</div>
-                <div className={styles.actionSubtitle}>Watch me live!</div>
+                <div className={styles.actionSubtitle}>@ItsNadchos</div>
               </div>
             </div>
             <ArrowRight size={20} className={styles.actionIcon} />
           </Link>
 
-          <Link href="#" onClick={handleLinkClick} className={styles.actionCard}>
+          <Link href="https://instagram.com/itsnadchos" target="_blank" className={styles.actionCard}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <FaInstagram className={styles.actionIcon} size={24} />
               <div>
                 <div className={styles.actionTitle}>Instagram</div>
-                <div className={styles.actionSubtitle}>Behind the scenes</div>
+                <div className={styles.actionSubtitle}>@itsnadchos</div>
               </div>
             </div>
             <ArrowRight size={20} className={styles.actionIcon} />
@@ -189,12 +189,12 @@ export default function Home() {
       */}
       <footer className={styles.footer}>
         <div className={styles.socials}>
-          <Link href="#" onClick={handleLinkClick} className={styles.socialIcon}><SiKick size={20} /></Link>
+          <Link href="https://kick.com/itsnadchos" target="_blank" className={styles.socialIcon}><SiKick size={20} /></Link>
           <Link href="#" onClick={handleLinkClick} className={styles.socialIcon}><FaTelegram size={20} /></Link>
-          <Link href="#" onClick={handleLinkClick} className={styles.socialIcon}><FaInstagram size={20} /></Link>
-          <Link href="#" onClick={handleLinkClick} className={styles.socialIcon}><FaTiktok size={20} /></Link>
+          <Link href="https://instagram.com/itsnadchos" target="_blank" className={styles.socialIcon}><FaInstagram size={20} /></Link>
+          <Link href="https://tiktok.com/@itsnadchos" target="_blank" className={styles.socialIcon}><FaTiktok size={20} /></Link>
         </div>
-        <p>© 2024 ItsNadchos. 18+ Content Disclaimer.</p>
+        <p>© 2025 ItsNadchos</p>
       </footer>
 
     </main>
