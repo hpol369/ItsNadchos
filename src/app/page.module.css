@@ -30,26 +30,84 @@
   animation: floatUp 15s infinite ease-in-out;
 }
 
-.bubble:nth-child(1) { left: 5%; width: 80px; height: 80px; animation-delay: 0s; animation-duration: 18s; }
-.bubble:nth-child(2) { left: 15%; width: 40px; height: 40px; animation-delay: 2s; animation-duration: 14s; }
-.bubble:nth-child(3) { left: 30%; width: 60px; height: 60px; animation-delay: 4s; animation-duration: 20s; }
-.bubble:nth-child(4) { left: 45%; width: 100px; height: 100px; animation-delay: 1s; animation-duration: 16s; }
-.bubble:nth-child(5) { left: 60%; width: 50px; height: 50px; animation-delay: 3s; animation-duration: 22s; }
-.bubble:nth-child(6) { left: 75%; width: 70px; height: 70px; animation-delay: 5s; animation-duration: 17s; }
-.bubble:nth-child(7) { left: 85%; width: 45px; height: 45px; animation-delay: 2.5s; animation-duration: 19s; }
-.bubble:nth-child(8) { left: 95%; width: 90px; height: 90px; animation-delay: 0.5s; animation-duration: 21s; }
+.bubble:nth-child(1) {
+  left: 5%;
+  width: 80px;
+  height: 80px;
+  animation-delay: 0s;
+  animation-duration: 18s;
+}
+
+.bubble:nth-child(2) {
+  left: 15%;
+  width: 40px;
+  height: 40px;
+  animation-delay: 2s;
+  animation-duration: 14s;
+}
+
+.bubble:nth-child(3) {
+  left: 30%;
+  width: 60px;
+  height: 60px;
+  animation-delay: 4s;
+  animation-duration: 20s;
+}
+
+.bubble:nth-child(4) {
+  left: 45%;
+  width: 100px;
+  height: 100px;
+  animation-delay: 1s;
+  animation-duration: 16s;
+}
+
+.bubble:nth-child(5) {
+  left: 60%;
+  width: 50px;
+  height: 50px;
+  animation-delay: 3s;
+  animation-duration: 22s;
+}
+
+.bubble:nth-child(6) {
+  left: 75%;
+  width: 70px;
+  height: 70px;
+  animation-delay: 5s;
+  animation-duration: 17s;
+}
+
+.bubble:nth-child(7) {
+  left: 85%;
+  width: 45px;
+  height: 45px;
+  animation-delay: 2.5s;
+  animation-duration: 19s;
+}
+
+.bubble:nth-child(8) {
+  left: 95%;
+  width: 90px;
+  height: 90px;
+  animation-delay: 0.5s;
+  animation-duration: 21s;
+}
 
 @keyframes floatUp {
   0% {
     transform: translateY(0) rotate(0deg);
     opacity: 0;
   }
+
   10% {
     opacity: 0.6;
   }
+
   90% {
     opacity: 0.4;
   }
+
   100% {
     transform: translateY(-120vh) rotate(360deg);
     opacity: 0;
@@ -120,8 +178,15 @@
 }
 
 @keyframes gentleFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
 }
 
 .heroCTA {
@@ -196,11 +261,11 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: flex-end;
-  gap: 0;
+  align-items: center;
+  gap: 2rem;
   max-width: 1400px;
   margin: 0 auto;
-  min-height: 500px;
+  min-height: 700px;
   position: relative;
 }
 
@@ -212,7 +277,7 @@
 .floatingPhoto img {
   height: auto;
   width: auto;
-  max-height: 400px;
+  max-height: 650px;
   object-fit: contain;
   filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.2));
   transition: all 0.4s ease;
@@ -224,8 +289,15 @@
 }
 
 /* Position each photo artistically */
-.photo1 { transform: translateX(30px) rotate(-2deg); z-index: 2; }
-.photo2 { transform: translateX(-30px) rotate(2deg); z-index: 1; }
+.photo1 {
+  transform: rotate(-3deg);
+  z-index: 2;
+}
+
+.photo2 {
+  transform: rotate(3deg);
+  z-index: 1;
+}
 
 @media (max-width: 768px) {
   .floatingGallery {
@@ -238,7 +310,7 @@
   }
 
   .floatingPhoto img {
-    max-height: 350px;
+    max-height: 500px;
   }
 }
 
@@ -341,7 +413,7 @@
   }
 
   .floatingPhoto img {
-    max-height: 280px;
+    max-height: 400px;
   }
 
   .linkCard {
@@ -470,11 +542,27 @@
 }
 
 @keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  25% { transform: scale(1.15); }
-  35% { transform: scale(1); }
-  45% { transform: scale(1.1); }
-  55% { transform: scale(1); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.15);
+  }
+
+  35% {
+    transform: scale(1);
+  }
+
+  45% {
+    transform: scale(1.1);
+  }
+
+  55% {
+    transform: scale(1);
+  }
 }
 
 /* ========================================
