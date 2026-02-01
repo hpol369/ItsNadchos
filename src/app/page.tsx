@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { Play, Heart, MessageCircle, ArrowRight } from "lucide-react";
 import { FaInstagram, FaTiktok, FaTelegram } from "react-icons/fa";
@@ -5,8 +8,21 @@ import { SiKick } from "react-icons/si";
 import styles from "./page.module.css";
 
 export default function Home() {
+  const [showToast, setShowToast] = useState(false);
+
+  const handleLinkClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2000);
+  };
+
   return (
     <main className={styles.main}>
+      {/* Toast Notification */}
+      <div className={`${styles.toast} ${showToast ? styles.showToast : ''}`}>
+        Coming soon 💋
+      </div>
+
       {/* Floating Bubbles */}
       <div className={styles.bubbles}>
         <div className={styles.bubble}></div>
@@ -51,7 +67,8 @@ export default function Home() {
         <div className={styles.buttonContainer}>
           <div className={styles.buttonGroup}>
             <Link
-              href="https://t.me/your_telegram"
+              href="#"
+              onClick={handleLinkClick}
               className={styles.btnPrimary}
             >
               <MessageCircle size={20} fill="currentColor" />
@@ -59,7 +76,8 @@ export default function Home() {
             </Link>
 
             <Link
-              href="https://kick.com/your_channel"
+              href="#"
+              onClick={handleLinkClick}
               className={styles.btnSecondary}
             >
               <SiKick size={20} />
@@ -118,7 +136,7 @@ export default function Home() {
           💖 Connect 💖
         </h2>
         <div className={styles.actions}>
-          <Link href="https://t.me/your_telegram" className={styles.actionCard}>
+          <Link href="#" onClick={handleLinkClick} className={styles.actionCard}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <MessageCircle className={styles.actionIcon} />
               <div>
@@ -129,7 +147,7 @@ export default function Home() {
             <ArrowRight size={20} className={styles.actionIcon} />
           </Link>
 
-          <Link href="https://kick.com/your_channel" className={styles.actionCard}>
+          <Link href="#" onClick={handleLinkClick} className={styles.actionCard}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <SiKick className={styles.actionIcon} size={24} />
               <div>
@@ -140,7 +158,7 @@ export default function Home() {
             <ArrowRight size={20} className={styles.actionIcon} />
           </Link>
 
-          <Link href="#" className={styles.actionCard}>
+          <Link href="#" onClick={handleLinkClick} className={styles.actionCard}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <FaInstagram className={styles.actionIcon} size={24} />
               <div>
@@ -171,10 +189,10 @@ export default function Home() {
       */}
       <footer className={styles.footer}>
         <div className={styles.socials}>
-          <Link href="https://kick.com/your_channel" className={styles.socialIcon}><SiKick size={20} /></Link>
-          <Link href="https://t.me/your_telegram" className={styles.socialIcon}><FaTelegram size={20} /></Link>
-          <Link href="#" className={styles.socialIcon}><FaInstagram size={20} /></Link>
-          <Link href="#" className={styles.socialIcon}><FaTiktok size={20} /></Link>
+          <Link href="#" onClick={handleLinkClick} className={styles.socialIcon}><SiKick size={20} /></Link>
+          <Link href="#" onClick={handleLinkClick} className={styles.socialIcon}><FaTelegram size={20} /></Link>
+          <Link href="#" onClick={handleLinkClick} className={styles.socialIcon}><FaInstagram size={20} /></Link>
+          <Link href="#" onClick={handleLinkClick} className={styles.socialIcon}><FaTiktok size={20} /></Link>
         </div>
         <p>© 2024 ItsNadchos. 18+ Content Disclaimer.</p>
       </footer>
