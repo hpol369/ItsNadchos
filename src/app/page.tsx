@@ -81,8 +81,8 @@ export default function Home() {
           <div className={`${styles.galleryItem} ${styles.galleryItemLarge}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://images.unsplash.com/photo-1616091093158-7755c3c0d832?q=80&w=1500&auto=format&fit=crop"
-              alt="Nadchos Mood"
+              src="/photos/photo2.jpg"
+              alt="Nadchos - Lace dress"
               className={styles.galleryImage}
             />
           </div>
@@ -91,8 +91,8 @@ export default function Home() {
           <div className={styles.galleryItem}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://images.unsplash.com/photo-1606814893907-c2e42943c91f?q=80&w=1500&auto=format&fit=crop"
-              alt="Stream Setup"
+              src="/photos/photo1.jpg"
+              alt="Nadchos - Black bodysuit"
               className={styles.galleryImage}
             />
           </div>
@@ -101,28 +101,8 @@ export default function Home() {
           <div className={styles.galleryItem}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://images.unsplash.com/photo-1542206395-9feb3edaa68d?q=80&w=1500&auto=format&fit=crop"
-              alt="Gaming Vibe"
-              className={styles.galleryImage}
-            />
-          </div>
-
-          {/* Item 4 */}
-          <div className={styles.galleryItem}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://images.unsplash.com/photo-1534008779836-397a7da931d6?q=80&w=1500&auto=format&fit=crop"
-              alt="Lifestyle"
-              className={styles.galleryImage}
-            />
-          </div>
-
-          {/* Item 5 */}
-          <div className={styles.galleryItem}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://images.unsplash.com/photo-1493612276216-9c7837066e90?q=80&w=1500&auto=format&fit=crop"
-              alt="Community"
+              src="/photos/photo3.jpg"
+              alt="Nadchos - Cowgirl style"
               className={styles.galleryImage}
             />
           </div>

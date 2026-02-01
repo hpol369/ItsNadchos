@@ -311,8 +311,8 @@
 
 @media (min-width: 1024px) {
     .galleryGrid {
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(2, 300px);
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(2, 280px);
     }
 }
 
@@ -320,7 +320,7 @@
     position: relative;
     border-radius: var(--radius-lg);
     overflow: hidden;
-    height: 300px;
+    height: 280px;
     cursor: pointer;
     border: 3px solid var(--color-pink-soft);
     box-shadow: 0 8px 30px rgba(255, 182, 200, 0.3);
@@ -334,12 +334,13 @@
 }
 
 .galleryItemLarge {
-    height: 600px;
+    height: 560px;
 }
 
 @media (min-width: 1024px) {
     .galleryItemLarge {
         grid-row: span 2;
+        height: 100%;
     }
 }
 
