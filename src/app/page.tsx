@@ -93,7 +93,7 @@ export default function Home() {
               alt="Catch the nacho!"
               className={styles.nacho}
               style={{ display: 'block' }} // Explicitly ensure visibility
-              onDoubleClick={(e) => popNacho(e, i)}
+              onClick={(e) => popNacho(e, i)}
             />
           )
         ))}
