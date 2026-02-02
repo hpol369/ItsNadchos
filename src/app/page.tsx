@@ -13,15 +13,6 @@ export default function Home() {
   const [score, setScore] = useState(0);
   const [poppedIndices, setPoppedIndices] = useState<number[]>([]);
 
-  // Reset popped nachos periodically so the game continues
-  useEffect(() => {
-    if (poppedIndices.length > 8) {
-      const timer = setTimeout(() => {
-        setPoppedIndices([]);
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [poppedIndices]);
 
   const handleComingSoon = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -50,6 +41,11 @@ export default function Home() {
     // Update game state
     setScore(prev => prev + 1);
     setPoppedIndices(prev => [...prev, index]);
+
+    // Respawn this nacho after 3 seconds
+    setTimeout(() => {
+      setPoppedIndices(prev => prev.filter(i => i !== index));
+    }, 3000);
   };
 
   return (
