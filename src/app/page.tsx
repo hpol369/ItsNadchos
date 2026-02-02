@@ -1,19 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Heart, MessageCircle, ArrowRight } from "lucide-react";
+import { Heart, MessageCircle, ArrowRight, Trophy } from "lucide-react";
 import { FaInstagram, FaTiktok, FaTelegram } from "react-icons/fa";
 import { SiKick } from "react-icons/si";
+import confetti from "canvas-confetti";
 import styles from "./page.module.css";
 
 export default function Home() {
   const [showToast, setShowToast] = useState(false);
+  const [score, setScore] = useState(0);
+  const [poppedIndices, setPoppedIndices] = useState<number[]>([]);
+
+  // Reset popped nachos periodically so the game continues
+  useEffect(() => {
+    if (poppedIndices.length > 8) {
+      const timer = setTimeout(() => {
+        setPoppedIndices([]);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [poppedIndices]);
 
   const handleComingSoon = (e: React.MouseEvent) => {
     e.preventDefault();
     setShowToast(true);
     setTimeout(() => setShowToast(false), 2000);
+  };
+
+  const popNacho = (e: React.MouseEvent, index: number) => {
+    // Prevent double triggers if already popped
+    if (poppedIndices.includes(index)) return;
+
+    // Calculate normalized coordinates for confetti origin (0-1)
+    const x = e.clientX / window.innerWidth;
+    const y = e.clientY / window.innerHeight;
+
+    // Fire confetti!
+    confetti({
+      origin: { x, y },
+      particleCount: 30,
+      spread: 60,
+      colors: ['#ff69b4', '#ff1493', '#ffd700'], // Pink and Gold
+      disableForReducedMotion: true,
+      zIndex: 9999,
+    });
+
+    // Update game state
+    setScore(prev => prev + 1);
+    setPoppedIndices(prev => [...prev, index]);
   };
 
   return (
@@ -23,10 +59,43 @@ export default function Home() {
         Coming soon
       </div>
 
-      {/* Floating Bubbles */}
+      {/* Score Counter (Only shows after play starts) */}
+      {score > 0 && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          background: 'rgba(255, 255, 255, 0.9)',
+          padding: '10px 20px',
+          borderRadius: '50px',
+          boxShadow: '0 4px 15px rgba(255, 105, 180, 0.3)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          fontWeight: 'bold',
+          color: '#ff1493',
+          zIndex: 100,
+          animation: 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+        }}>
+          <Trophy size={20} />
+          <span>{score} Nachos</span>
+        </div>
+      )}
+
+      {/* Floating Nachos */}
       <div className={styles.bubbles}>
-        {[...Array(8)].map((_, i) => (
-          <div key={i} className={styles.bubble}></div>
+        {[...Array(12)].map((_, i) => (
+          !poppedIndices.includes(i) && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={i}
+              src="/nacho.svg"
+              alt="Catch the nacho!"
+              className={styles.nacho}
+              style={{ display: 'block' }} // Explicitly ensure visibility
+              onDoubleClick={(e) => popNacho(e, i)}
+            />
+          )
         ))}
       </div>
 

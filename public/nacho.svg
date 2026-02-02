@@ -1,0 +1,20 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Main Chip Body with Rounded Corners -->
+  <path d="M47.4226 12.3607L12.7821 72.3607C10.7821 75.8248 13.2821 80.153 17.2821 80.153H82.7179C86.7179 80.153 89.2179 75.8248 87.2179 72.3607L52.5774 12.3607C50.5774 8.89658 45.4226 8.89658 43.4226 12.3607Z" 
+        fill="#FF9EAA" stroke="#FF1493" stroke-width="3" stroke-linejoin="round"/>
+  
+  <!-- Seasoning / Texture Dust (Varied sizes and positions for organic look) -->
+  <circle cx="50" cy="30" r="1.5" fill="#C71585" fill-opacity="0.7"/>
+  <circle cx="45" cy="45" r="1" fill="#C71585" fill-opacity="0.7"/>
+  <circle cx="60" cy="40" r="2" fill="#C71585" fill-opacity="0.6"/>
+  <circle cx="35" cy="65" r="1.5" fill="#C71585" fill-opacity="0.8"/>
+  <circle cx="70" cy="60" r="1" fill="#C71585" fill-opacity="0.7"/>
+  <circle cx="55" cy="70" r="1.5" fill="#C71585" fill-opacity="0.6"/>
+  <circle cx="25" cy="75" r="1" fill="#C71585" fill-opacity="0.7"/>
+  <circle cx="75" cy="75" r="1.5" fill="#C71585" fill-opacity="0.8"/>
+  <circle cx="40" cy="55" r="1" fill="#C71585" fill-opacity="0.6"/>
+  <circle cx="65" cy="50" r="1.5" fill="#C71585" fill-opacity="0.7"/>
+  <circle cx="50" cy="50" r="0.8" fill="#C71585" fill-opacity="0.6"/>
+  <circle cx="30" cy="70" r="1.2" fill="#C71585" fill-opacity="0.7"/>
+  <circle cx="80" cy="70" r="1" fill="#C71585" fill-opacity="0.7"/>
+</svg>

@@ -9,7 +9,7 @@
 }
 
 /* ========================================
-   FLOATING BUBBLES
+   FLOATING NACHOS
    ======================================== */
 .bubbles {
   position: fixed;
@@ -22,94 +22,137 @@
   overflow: hidden;
 }
 
-.bubble {
+.nacho {
   position: absolute;
   bottom: -150px;
-  background: linear-gradient(135deg, rgba(255, 182, 193, 0.4), rgba(255, 105, 180, 0.2));
-  border-radius: 50%;
-  animation: floatUp 15s infinite ease-in-out;
+  width: 50px;
+  height: 50px;
+  opacity: 0.6;
+  animation: floatUpTumble 15s infinite linear;
+  pointer-events: auto;
+  /* Enable clicking */
+  cursor: crosshair;
+  /* Suggests gameplay/target */
+  transition: transform 0.2s;
 }
 
-.bubble:nth-child(1) {
+.nacho:active {
+  transform: scale(0.9);
+}
+
+/* Specific Nacho Variations */
+.nacho:nth-child(1) {
   left: 5%;
-  width: 80px;
-  height: 80px;
-  animation-delay: 0s;
+  width: 60px;
+  height: 60px;
   animation-duration: 18s;
+  animation-delay: 0s;
 }
 
-.bubble:nth-child(2) {
+.nacho:nth-child(2) {
   left: 15%;
   width: 40px;
   height: 40px;
+  animation-duration: 24s;
   animation-delay: 2s;
-  animation-duration: 14s;
 }
 
-.bubble:nth-child(3) {
-  left: 30%;
-  width: 60px;
-  height: 60px;
-  animation-delay: 4s;
-  animation-duration: 20s;
-}
-
-.bubble:nth-child(4) {
-  left: 45%;
-  width: 100px;
-  height: 100px;
-  animation-delay: 1s;
-  animation-duration: 16s;
-}
-
-.bubble:nth-child(5) {
-  left: 60%;
-  width: 50px;
-  height: 50px;
-  animation-delay: 3s;
-  animation-duration: 22s;
-}
-
-.bubble:nth-child(6) {
-  left: 75%;
+.nacho:nth-child(3) {
+  left: 25%;
   width: 70px;
   height: 70px;
+  animation-duration: 20s;
   animation-delay: 5s;
-  animation-duration: 17s;
 }
 
-.bubble:nth-child(7) {
-  left: 85%;
+.nacho:nth-child(4) {
+  left: 35%;
+  width: 50px;
+  height: 50px;
+  animation-duration: 16s;
+  animation-delay: 1s;
+}
+
+.nacho:nth-child(5) {
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  animation-duration: 22s;
+  animation-delay: 4s;
+}
+
+.nacho:nth-child(6) {
+  left: 60%;
   width: 45px;
   height: 45px;
-  animation-delay: 2.5s;
   animation-duration: 19s;
+  animation-delay: 7s;
 }
 
-.bubble:nth-child(8) {
+.nacho:nth-child(7) {
+  left: 75%;
+  width: 65px;
+  height: 65px;
+  animation-duration: 25s;
+  animation-delay: 3s;
+}
+
+.nacho:nth-child(8) {
+  left: 85%;
+  width: 55px;
+  height: 55px;
+  animation-duration: 17s;
+  animation-delay: 6s;
+}
+
+.nacho:nth-child(9) {
   left: 95%;
-  width: 90px;
-  height: 90px;
-  animation-delay: 0.5s;
+  width: 75px;
+  height: 75px;
   animation-duration: 21s;
+  animation-delay: 2s;
 }
 
-@keyframes floatUp {
+.nacho:nth-child(10) {
+  left: 10%;
+  width: 35px;
+  height: 35px;
+  animation-duration: 28s;
+  animation-delay: 9s;
+}
+
+.nacho:nth-child(11) {
+  left: 40%;
+  width: 50px;
+  height: 50px;
+  animation-duration: 23s;
+  animation-delay: 11s;
+}
+
+.nacho:nth-child(12) {
+  left: 90%;
+  width: 60px;
+  height: 60px;
+  animation-duration: 19s;
+  animation-delay: 8s;
+}
+
+@keyframes floatUpTumble {
   0% {
     transform: translateY(0) rotate(0deg);
     opacity: 0;
   }
 
   10% {
-    opacity: 0.6;
+    opacity: 0.8;
   }
 
   90% {
-    opacity: 0.4;
+    opacity: 0.6;
   }
 
   100% {
-    transform: translateY(-120vh) rotate(360deg);
+    transform: translateY(-120vh) rotate(720deg);
     opacity: 0;
   }
 }
