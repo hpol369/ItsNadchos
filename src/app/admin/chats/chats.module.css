@@ -1,0 +1,309 @@
+.chatsLayout {
+  display: flex;
+  height: calc(100vh - 64px);
+  margin: -32px;
+  background: #1a1a2e;
+}
+
+/* Users List */
+.usersList {
+  width: 360px;
+  background: #1e1e38;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.usersHeader {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.usersHeader h3 {
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.usersHeader span {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.usersScroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.userItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.userItem:hover {
+  background: rgba(255, 105, 180, 0.05);
+}
+
+.userItem.active {
+  background: rgba(255, 105, 180, 0.15);
+}
+
+.userAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff69b4, #ff85c1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.userInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.userName {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.blockedBadge {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  background: rgba(248, 113, 113, 0.2);
+  color: #f87171;
+  border-radius: 4px;
+}
+
+.userLastMessage {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userLastMessage span {
+  color: #ff69b4;
+}
+
+.userMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.userTime {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.messageCount {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  background: rgba(255, 105, 180, 0.2);
+  color: #ff69b4;
+  border-radius: 10px;
+}
+
+/* Chat View */
+.chatView {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #16162a;
+}
+
+.noChat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.3);
+  gap: 16px;
+}
+
+.chatHeader {
+  padding: 16px 24px;
+  background: #1e1e38;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chatHeaderInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.chatHeaderAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff69b4, #ff85c1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.chatHeaderName {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.chatHeaderMeta {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.chatHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.telegramId {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: monospace;
+}
+
+/* Messages */
+.messagesContainer {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dateHeader {
+  text-align: center;
+  padding: 16px 0;
+}
+
+.dateHeader span {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+  background: #1e1e38;
+  padding: 6px 16px;
+  border-radius: 20px;
+}
+
+.message {
+  display: flex;
+  margin-bottom: 4px;
+}
+
+.message.userMessage {
+  justify-content: flex-end;
+}
+
+.message.botMessage {
+  justify-content: flex-start;
+}
+
+.messageBubble {
+  max-width: 70%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  position: relative;
+}
+
+.userMessage .messageBubble {
+  background: linear-gradient(135deg, #ff69b4, #e84a7f);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.botMessage .messageBubble {
+  background: #2a2a4a;
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom-left-radius: 4px;
+}
+
+.messageContent {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.messageTime {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  margin-top: 6px;
+  opacity: 0.6;
+}
+
+.userMessage .messageTime {
+  justify-content: flex-end;
+}
+
+/* Scrollbar */
+.usersScroll::-webkit-scrollbar,
+.messagesContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.usersScroll::-webkit-scrollbar-track,
+.messagesContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.usersScroll::-webkit-scrollbar-thumb,
+.messagesContainer::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.usersScroll::-webkit-scrollbar-thumb:hover,
+.messagesContainer::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .usersList {
+    width: 100%;
+    display: none;
+  }
+
+  .usersList.showOnMobile {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+  }
+}
