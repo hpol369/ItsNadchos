@@ -101,7 +101,7 @@ export default function PhotosPage() {
           </div>
         ) : photos.length === 0 ? (
           <div style={{ padding: "24px" }}>
-            <div className={styles.uploadArea}>
+            <label className={styles.uploadArea} style={{ display: "block", position: "relative" }}>
               <Upload size={48} style={{ color: "rgba(255,255,255,0.3)" }} />
               <p>Drag and drop photos here or click to upload</p>
               <p style={{ fontSize: "0.85rem", marginTop: "8px" }}>
@@ -112,14 +112,9 @@ export default function PhotosPage() {
                 multiple
                 accept="image/*"
                 onChange={handleFileUpload}
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  opacity: 0,
-                  cursor: "pointer",
-                }}
+                style={{ display: "none" }}
               />
-            </div>
+            </label>
           </div>
         ) : (
           <div className={styles.photoGrid}>
