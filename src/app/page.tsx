@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Heart, MessageCircle, ArrowRight, Trophy } from "lucide-react";
 import { FaInstagram, FaTiktok, FaTelegram } from "react-icons/fa";
@@ -9,16 +9,11 @@ import confetti from "canvas-confetti";
 import styles from "./page.module.css";
 
 export default function Home() {
-  const [showToast, setShowToast] = useState(false);
   const [score, setScore] = useState(0);
   const [poppedIndices, setPoppedIndices] = useState<number[]>([]);
 
-
-  const handleComingSoon = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 2000);
-  };
+  // Telegram bot link - update this with your actual bot username
+  const TELEGRAM_BOT_URL = "https://t.me/ItsNadchos_bot";
 
   const popNacho = (e: React.MouseEvent, index: number) => {
     // Prevent double triggers if already popped
@@ -50,10 +45,6 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      {/* Toast Notification */}
-      <div className={`${styles.toast} ${showToast ? styles.showToast : ''}`}>
-        Coming soon
-      </div>
 
       {/* Score Counter (Only shows after play starts) */}
       {score > 0 && (
@@ -114,7 +105,7 @@ export default function Home() {
         </div>
 
         <div className={styles.heroCTA}>
-          <Link href="#" onClick={handleComingSoon} className={styles.btnPrimary}>
+          <Link href={TELEGRAM_BOT_URL} target="_blank" className={styles.btnPrimary}>
             <MessageCircle size={20} />
             Come say Hi!
           </Link>
@@ -175,11 +166,11 @@ export default function Home() {
             </Link>
           </div>
 
-          <Link href="#" onClick={handleComingSoon} className={`${styles.linkCard} ${styles.telegramCard}`}>
+          <Link href={TELEGRAM_BOT_URL} target="_blank" className={`${styles.linkCard} ${styles.telegramCard}`}>
             <FaTelegram size={28} />
             <div>
               <span className={styles.linkTitle}>Telegram</span>
-              <span className={styles.linkSub}>Say hi to me directly!</span>
+              <span className={styles.linkSub}>Chat with me 1-on-1!</span>
             </div>
             <ArrowRight size={20} />
           </Link>
@@ -200,7 +191,7 @@ export default function Home() {
       <footer className={styles.footer}>
         <div className={styles.footerSocials}>
           <Link href="https://kick.com/itsnadchos" target="_blank"><SiKick size={22} /></Link>
-          <Link href="#" onClick={handleComingSoon}><FaTelegram size={22} /></Link>
+          <Link href={TELEGRAM_BOT_URL} target="_blank"><FaTelegram size={22} /></Link>
           <Link href="https://instagram.com/itsnadchos" target="_blank"><FaInstagram size={22} /></Link>
           <Link href="https://tiktok.com/@itsnadchos" target="_blank"><FaTiktok size={22} /></Link>
         </div>
