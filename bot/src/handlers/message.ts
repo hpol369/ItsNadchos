@@ -40,14 +40,26 @@ function getCreditFooter(balance: number, freeRemaining: number): string {
   }
 }
 
-// Send response as a single message with typing delay
+// Send response as a single message with realistic typing delay
 async function sendMessage(ctx: Context, response: string): Promise<void> {
   // Show typing indicator
   await ctx.replyWithChatAction('typing');
 
-  // Calculate delay based on message length (1-3 seconds)
-  const delay = Math.min(1000 + response.length * 15, 3000);
-  await new Promise(resolve => setTimeout(resolve, delay));
+  // Calculate realistic delay: ~30-50ms per character (like actual typing)
+  // Min 3 seconds, max 12 seconds
+  const baseDelay = 3000;
+  const perCharDelay = 35 + Math.random() * 15; // 35-50ms per char
+  const calculatedDelay = baseDelay + response.length * perCharDelay;
+  const delay = Math.min(Math.max(calculatedDelay, 3000), 12000);
+
+  // For very long messages, refresh typing indicator halfway
+  if (delay > 5000) {
+    await new Promise(resolve => setTimeout(resolve, delay / 2));
+    await ctx.replyWithChatAction('typing');
+    await new Promise(resolve => setTimeout(resolve, delay / 2));
+  } else {
+    await new Promise(resolve => setTimeout(resolve, delay));
+  }
 
   // Send as single message
   await ctx.reply(response);
