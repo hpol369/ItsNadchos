@@ -7,6 +7,9 @@ interface ConversationContext {
   displayName: string | null;
 }
 
+// Session timeout in hours - messages older than this are not included in context
+const SESSION_TIMEOUT_HOURS = 4;
+
 export async function getConversationContext(userId: string): Promise<ConversationContext> {
   // Get user's display name
   const { data: user } = await supabase
@@ -15,15 +18,19 @@ export async function getConversationContext(userId: string): Promise<Conversati
     .eq('id', userId)
     .single();
 
-  // Get recent messages (last 30)
+  // Calculate session cutoff time (4 hours ago)
+  const sessionCutoff = new Date(Date.now() - SESSION_TIMEOUT_HOURS * 60 * 60 * 1000).toISOString();
+
+  // Get recent messages from current session only
   const { data: messages } = await supabase
     .from('nacho_messages')
     .select('*')
     .eq('user_id', userId)
+    .gte('created_at', sessionCutoff)
     .order('created_at', { ascending: true })
     .limit(30);
 
-  // Get user memories
+  // Get user memories (these persist across sessions)
   const { data: memories } = await supabase
     .from('nacho_user_memories')
     .select('*')
