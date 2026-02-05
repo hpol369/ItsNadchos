@@ -40,57 +40,17 @@ function getCreditFooter(balance: number, freeRemaining: number): string {
   }
 }
 
-// Split response into max 2 messages, only if really long
-async function sendSplitMessages(ctx: Context, response: string, creditFooter?: string): Promise<void> {
-  // Only split if response is very long (300+ chars)
-  // And only into max 2 parts
-  let parts: string[] = [];
+// Send response as a single message with typing delay
+async function sendMessage(ctx: Context, response: string): Promise<void> {
+  // Show typing indicator
+  await ctx.replyWithChatAction('typing');
 
-  if (response.length > 300) {
-    // Try to split on double newline first
-    const paragraphs = response.split(/\n\n+/).map(p => p.trim()).filter(p => p.length > 0);
+  // Calculate delay based on message length (1-3 seconds)
+  const delay = Math.min(1000 + response.length * 15, 3000);
+  await new Promise(resolve => setTimeout(resolve, delay));
 
-    if (paragraphs.length >= 2) {
-      // Combine into max 2 parts
-      const midpoint = Math.ceil(paragraphs.length / 2);
-      parts = [
-        paragraphs.slice(0, midpoint).join('\n\n'),
-        paragraphs.slice(midpoint).join('\n\n')
-      ];
-    } else {
-      // Just send as one message
-      parts = [response];
-    }
-  } else {
-    // Short response - send as single message
-    parts = [response];
-  }
-
-  // Send each part with typing indicator and realistic delay
-  for (let i = 0; i < parts.length; i++) {
-    const message = parts[i];
-    const isLastMessage = i === parts.length - 1;
-
-    // Show typing indicator
-    await ctx.replyWithChatAction('typing');
-
-    // Calculate delay based on message length
-    const delay = getTypingDelay(message);
-    await new Promise(resolve => setTimeout(resolve, delay));
-
-    // Add credit footer to last message
-    const finalMessage = isLastMessage && creditFooter
-      ? message + creditFooter
-      : message;
-
-    // Send the message
-    await ctx.reply(finalMessage);
-
-    // Small pause between messages (like hitting send and starting to type again)
-    if (!isLastMessage) {
-      await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 400));
-    }
-  }
+  // Send as single message
+  await ctx.reply(response);
 }
 
 export async function handleMessage(ctx: Context) {
@@ -225,8 +185,8 @@ export async function handleMessage(ctx: Context) {
       await deductMessageCredit(user.id);
     }
 
-    // Send response as multiple messages (no credit footer - users can check with /nachos)
-    await sendSplitMessages(ctx, response);
+    // Send response as single message
+    await sendMessage(ctx, response);
 
     // Chance to send a free photo (about 10% after 5+ messages)
     const totalMessages = user.total_messages + 1;
