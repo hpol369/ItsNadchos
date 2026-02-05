@@ -6,7 +6,7 @@ import { checkRateLimit } from '../services/ratelimit.js';
 import { shouldShowUpsell, getUpsellMessage } from '../services/upsell.js';
 import { extractMemories } from '../services/memory.js';
 import { RATE_LIMIT_WARNING, BLOCKED_MESSAGE } from '../utils/prompts.js';
-import { checkMessageCredits, incrementTodayMessages, deductMessageCredit, FREE_DAILY_MESSAGES } from '../services/credits.js';
+import { checkMessageCredits, incrementTodayMessages, deductMessageCredit, FREE_DAILY_MESSAGES, getCreditBalance } from '../services/credits.js';
 import { generatePurchaseToken } from '../services/tokens.js';
 
 // Calculate typing delay based on message length (like a real person typing)
@@ -22,8 +22,25 @@ function getTypingDelay(text: string): number {
   return Math.min(baseDelay + charDelay, maxDelay);
 }
 
+// Generate credit balance footer
+function getCreditFooter(balance: number, freeRemaining: number): string {
+  if (freeRemaining > 0) {
+    // User is on free messages
+    return `\n\n· 💕 ${freeRemaining} free left today`;
+  } else if (balance <= 3 && balance > 0) {
+    // Low balance warning
+    return `\n\n· 🌮 ${balance} — running low 💕`;
+  } else if (balance > 0) {
+    // Normal balance
+    return `\n\n· 🌮 ${balance}`;
+  } else {
+    // No credits
+    return `\n\n· 🌮 0 — get more credits 💕`;
+  }
+}
+
 // Split response into multiple messages and send with realistic delays
-async function sendSplitMessages(ctx: Context, response: string): Promise<void> {
+async function sendSplitMessages(ctx: Context, response: string, creditFooter?: string): Promise<void> {
   // Split on double newlines (paragraphs) or sentences ending with emoji
   const parts = response
     .split(/\n\n+/)
@@ -40,6 +57,7 @@ async function sendSplitMessages(ctx: Context, response: string): Promise<void> 
   // Send each part with typing indicator and realistic delay
   for (let i = 0; i < parts.length; i++) {
     const message = parts[i];
+    const isLastMessage = i === parts.length - 1;
 
     // Show typing indicator
     await ctx.replyWithChatAction('typing');
@@ -48,11 +66,16 @@ async function sendSplitMessages(ctx: Context, response: string): Promise<void> 
     const delay = getTypingDelay(message);
     await new Promise(resolve => setTimeout(resolve, delay));
 
+    // Add credit footer to last message
+    const finalMessage = isLastMessage && creditFooter
+      ? message + creditFooter
+      : message;
+
     // Send the message
-    await ctx.reply(message);
+    await ctx.reply(finalMessage);
 
     // Small pause between messages (like hitting send and starting to type again)
-    if (i < parts.length - 1) {
+    if (!isLastMessage) {
       await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 400));
     }
   }
@@ -190,8 +213,13 @@ export async function handleMessage(ctx: Context) {
       await deductMessageCredit(user.id);
     }
 
+    // Get updated credit balance for footer
+    const updatedBalance = await getCreditBalance(user.id);
+    const freeRemaining = Math.max(0, FREE_DAILY_MESSAGES - updatedBalance.freeMessagesToday);
+    const creditFooter = getCreditFooter(updatedBalance.balance, freeRemaining);
+
     // Send response as multiple messages
-    await sendSplitMessages(ctx, response);
+    await sendSplitMessages(ctx, response, creditFooter);
 
     // Check if we should show upsell
     const totalMessages = user.total_messages + 1;
