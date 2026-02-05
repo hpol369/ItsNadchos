@@ -1,10 +1,7 @@
 [build]
 builder = "dockerfile"
-dockerfilePath = "bot/Dockerfile"
-dockerContext = "bot"
 
 [deploy]
-startCommand = "npm start"
 healthcheckPath = "/health"
 healthcheckTimeout = 100
 restartPolicyType = "on_failure"
