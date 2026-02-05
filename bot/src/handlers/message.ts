@@ -8,6 +8,7 @@ import { extractMemories } from '../services/memory.js';
 import { RATE_LIMIT_WARNING, BLOCKED_MESSAGE } from '../utils/prompts.js';
 import { checkMessageCredits, incrementTodayMessages, deductMessageCredit, FREE_DAILY_MESSAGES, getCreditBalance } from '../services/credits.js';
 import { generatePurchaseToken } from '../services/tokens.js';
+import { getRandomFreePhoto, getFreePhotoUrl, getPhotoCaption } from '../services/freePhotos.js';
 
 // Calculate typing delay based on message length (like a real person typing)
 function getTypingDelay(text: string): number {
@@ -215,6 +216,27 @@ export async function handleMessage(ctx: Context) {
 
     // Send response as multiple messages (no credit footer - users can check with /nachos)
     await sendSplitMessages(ctx, response);
+
+    // Chance to send a free photo (about 10% after 5+ messages)
+    const totalMessages = user.total_messages + 1;
+    if (totalMessages >= 5 && Math.random() < 0.10) {
+      try {
+        const freePhoto = await getRandomFreePhoto();
+        if (freePhoto) {
+          // Wait a bit before sending photo (feels more natural)
+          await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 2000));
+          await ctx.replyWithChatAction('upload_photo');
+          await new Promise(resolve => setTimeout(resolve, 1000));
+
+          const photoUrl = getFreePhotoUrl(freePhoto.storage_path);
+          const caption = getPhotoCaption(freePhoto.description);
+          await ctx.replyWithPhoto(photoUrl, { caption });
+        }
+      } catch (err) {
+        // Silently fail - don't break the conversation for a bonus photo
+        console.error('Error sending free photo:', err);
+      }
+    }
 
     // Check if we should show upsell
     const totalMessages = user.total_messages + 1;
