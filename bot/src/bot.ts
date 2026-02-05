@@ -75,8 +75,8 @@ bot.command('buy', async (ctx) => {
   );
 });
 
-// /balance - Show current credits and free messages
-bot.command('balance', async (ctx) => {
+// /balance or /nachos - Show current credits and free messages
+bot.command(['balance', 'nachos'], async (ctx) => {
   const telegramUser = ctx.from;
   if (!telegramUser) return;
 

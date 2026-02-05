@@ -213,13 +213,8 @@ export async function handleMessage(ctx: Context) {
       await deductMessageCredit(user.id);
     }
 
-    // Get updated credit balance for footer
-    const updatedBalance = await getCreditBalance(user.id);
-    const freeRemaining = Math.max(0, FREE_DAILY_MESSAGES - updatedBalance.freeMessagesToday);
-    const creditFooter = getCreditFooter(updatedBalance.balance, freeRemaining);
-
-    // Send response as multiple messages
-    await sendSplitMessages(ctx, response, creditFooter);
+    // Send response as multiple messages (no credit footer - users can check with /nachos)
+    await sendSplitMessages(ctx, response);
 
     // Check if we should show upsell
     const totalMessages = user.total_messages + 1;
