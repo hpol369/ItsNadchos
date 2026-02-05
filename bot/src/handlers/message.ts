@@ -40,20 +40,31 @@ function getCreditFooter(balance: number, freeRemaining: number): string {
   }
 }
 
-// Split response into multiple messages and send with realistic delays
+// Split response into max 2 messages, only if really long
 async function sendSplitMessages(ctx: Context, response: string, creditFooter?: string): Promise<void> {
-  // Split on double newlines (paragraphs) or sentences ending with emoji
-  const parts = response
-    .split(/\n\n+/)
-    .flatMap(part => {
-      // If part is still long, try to split on sentences
-      if (part.length > 100) {
-        return part.split(/(?<=[.!?])\s+(?=[A-Za-z])/);
-      }
-      return [part];
-    })
-    .map(p => p.trim())
-    .filter(p => p.length > 0);
+  // Only split if response is very long (300+ chars)
+  // And only into max 2 parts
+  let parts: string[] = [];
+
+  if (response.length > 300) {
+    // Try to split on double newline first
+    const paragraphs = response.split(/\n\n+/).map(p => p.trim()).filter(p => p.length > 0);
+
+    if (paragraphs.length >= 2) {
+      // Combine into max 2 parts
+      const midpoint = Math.ceil(paragraphs.length / 2);
+      parts = [
+        paragraphs.slice(0, midpoint).join('\n\n'),
+        paragraphs.slice(midpoint).join('\n\n')
+      ];
+    } else {
+      // Just send as one message
+      parts = [response];
+    }
+  } else {
+    // Short response - send as single message
+    parts = [response];
+  }
 
   // Send each part with typing indicator and realistic delay
   for (let i = 0; i < parts.length; i++) {
