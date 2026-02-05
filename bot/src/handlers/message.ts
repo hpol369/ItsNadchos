@@ -9,6 +9,19 @@ import { RATE_LIMIT_WARNING, BLOCKED_MESSAGE } from '../utils/prompts.js';
 import { checkMessageCredits, incrementTodayMessages, deductMessageCredit, FREE_DAILY_MESSAGES } from '../services/credits.js';
 import { generatePurchaseToken } from '../services/tokens.js';
 
+// Calculate typing delay based on message length (like a real person typing)
+function getTypingDelay(text: string): number {
+  // Average typing speed: ~40-60 words per minute = ~200-300 chars per minute
+  // So roughly 200-300ms per character, but we'll make it faster (50-80ms per char)
+  // Plus some random variation and a minimum delay
+  const baseDelay = 1000; // minimum 1 second
+  const perCharDelay = 40 + Math.random() * 30; // 40-70ms per character
+  const charDelay = text.length * perCharDelay;
+  const maxDelay = 4000; // cap at 4 seconds
+
+  return Math.min(baseDelay + charDelay, maxDelay);
+}
+
 // Split response into multiple messages and send with realistic delays
 async function sendSplitMessages(ctx: Context, response: string): Promise<void> {
   // Split on double newlines (paragraphs) or sentences ending with emoji
@@ -24,14 +37,24 @@ async function sendSplitMessages(ctx: Context, response: string): Promise<void> 
     .map(p => p.trim())
     .filter(p => p.length > 0);
 
-  // Send each part with typing indicator and delay
+  // Send each part with typing indicator and realistic delay
   for (let i = 0; i < parts.length; i++) {
-    if (i > 0) {
-      await ctx.replyWithChatAction('typing');
-      // Random delay between 800ms and 1500ms to feel natural
-      await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 700));
+    const message = parts[i];
+
+    // Show typing indicator
+    await ctx.replyWithChatAction('typing');
+
+    // Calculate delay based on message length
+    const delay = getTypingDelay(message);
+    await new Promise(resolve => setTimeout(resolve, delay));
+
+    // Send the message
+    await ctx.reply(message);
+
+    // Small pause between messages (like hitting send and starting to type again)
+    if (i < parts.length - 1) {
+      await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 400));
     }
-    await ctx.reply(parts[i]);
   }
 }
 
