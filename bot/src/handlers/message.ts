@@ -210,7 +210,6 @@ export async function handleMessage(ctx: Context) {
     }
 
     // Check if we should show upsell
-    const totalMessages = user.total_messages + 1;
     const upsellCheck = await shouldShowUpsell(user.id, totalMessages, state);
 
     if (upsellCheck.shouldShow && upsellCheck.tier) {
