@@ -101,9 +101,18 @@ async function start() {
     });
     console.log(`Server running on port ${PORT}`);
   } else {
-    // Polling mode for development
+    // Polling mode for development/Railway without webhook
     console.log('No WEBHOOK_URL set, starting in polling mode...');
     await bot.api.deleteWebhook();
+
+    // Still start the HTTP server for health checks
+    console.log(`Starting HTTP server on port ${PORT} for health checks...`);
+    const { serve } = await import('@hono/node-server');
+    serve({
+      fetch: app.fetch,
+      port: Number(PORT),
+    });
+    console.log(`HTTP server running on port ${PORT}`);
 
     bot.start({
       onStart: (botInfo) => {
