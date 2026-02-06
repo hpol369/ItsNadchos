@@ -122,21 +122,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* GALLERY SECTION - Floating Photos */}
-      <section className={styles.gallerySection}>
-        <h2 className={styles.sectionTitle}>Visuals</h2>
-
-        <div className={styles.floatingGallery}>
-          <div className={`${styles.floatingPhoto} ${styles.photo1}`}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/photos/hero.png" alt="Nadchos" />
-          </div>
-          <div className={`${styles.floatingPhoto} ${styles.photo2}`}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/photos/photo1.png" alt="Nadchos" />
-          </div>
-        </div>
-      </section>
 
       {/* CONNECT SECTION */}
       <section className={styles.connectSection}>
