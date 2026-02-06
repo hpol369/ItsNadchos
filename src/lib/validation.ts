@@ -2,16 +2,17 @@ import { z } from 'zod';
 
 /**
  * Schema for validate-token endpoint
+ * Token is a base64url encoded string (43 chars from 32 random bytes)
  */
 export const validateTokenSchema = z.object({
-  token: z.string().uuid('Invalid token format'),
+  token: z.string().min(40).max(50),
 });
 
 /**
  * Schema for checkout endpoint
  */
 export const checkoutSchema = z.object({
-  token: z.string().uuid('Invalid token format'),
+  token: z.string().min(40).max(50),
   packageId: z.string().uuid('Invalid package ID format'),
 });
 
