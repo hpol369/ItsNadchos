@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { hasValidAdminSession, getSessionCookieName } from '@/lib/admin-auth';
+import { checkRateLimit, getClientIdentifier, RATE_LIMITS, rateLimitHeaders } from '@/lib/ratelimit';
 
 function getSupabase() {
   const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -13,12 +15,37 @@ function getSupabase() {
 }
 
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const userId = searchParams.get('userId');
+  // Check rate limit
+  const clientId = getClientIdentifier(request);
+  const rateLimit = checkRateLimit(`admin:${clientId}`, RATE_LIMITS.admin);
 
-  if (!userId) {
-    return NextResponse.json({ error: 'Missing userId' }, { status: 400 });
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429, headers: rateLimitHeaders(rateLimit) }
+    );
   }
+
+  // Verify admin authentication
+  const sessionCookie = request.cookies.get(getSessionCookieName());
+  const isAuthenticated = await hasValidAdminSession(sessionCookie?.value);
+
+  if (!isAuthenticated) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Validate query parameters
+  const { adminMessagesSchema, validateQuery } = await import('@/lib/validation');
+  const validationResult = validateQuery(
+    adminMessagesSchema,
+    request.nextUrl.searchParams
+  );
+
+  if (!validationResult.success) {
+    return NextResponse.json({ error: validationResult.error }, { status: 400 });
+  }
+
+  const { userId } = validationResult.data;
 
   try {
     const supabase = getSupabase();

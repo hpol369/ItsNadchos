@@ -28,12 +28,17 @@ export interface CreateCheckoutParams {
   cancelUrl: string;
 }
 
+export interface CheckoutSessionResult {
+  url: string;
+  sessionId: string;
+}
+
 /**
  * Create a Stripe checkout session for credit purchase
  */
 export async function createCheckoutSession(
   params: CreateCheckoutParams
-): Promise<string> {
+): Promise<CheckoutSessionResult> {
   const stripeClient = stripe.get();
   if (!stripeClient) {
     throw new Error('Stripe not configured');
@@ -69,7 +74,10 @@ export async function createCheckoutSession(
     throw new Error('Failed to create checkout session');
   }
 
-  return session.url;
+  return {
+    url: session.url,
+    sessionId: session.id,
+  };
 }
 
 /**

@@ -1,16 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validatePurchaseToken, getCreditPackages } from '@/lib/supabase';
+import { validateTokenSchema, validateQuery } from '@/lib/validation';
+import { checkRateLimit, getClientIdentifier, RATE_LIMITS, rateLimitHeaders } from '@/lib/ratelimit';
 
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const token = searchParams.get('token');
+  // Check rate limit
+  const clientId = getClientIdentifier(request);
+  const rateLimit = checkRateLimit(`validate-token:${clientId}`, RATE_LIMITS.validateToken);
 
-  if (!token) {
+  if (!rateLimit.allowed) {
     return NextResponse.json(
-      { valid: false, error: 'No token provided' },
+      { valid: false, error: 'Too many requests' },
+      { status: 429, headers: rateLimitHeaders(rateLimit) }
+    );
+  }
+
+  // Validate query parameters
+  const validationResult = validateQuery(
+    validateTokenSchema,
+    request.nextUrl.searchParams
+  );
+
+  if (!validationResult.success) {
+    return NextResponse.json(
+      { valid: false, error: validationResult.error },
       { status: 400 }
     );
   }
+
+  const { token } = validationResult.data;
 
   try {
     const validation = await validatePurchaseToken(token);

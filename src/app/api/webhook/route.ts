@@ -1,13 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { constructWebhookEvent, stripe } from '@/lib/stripe';
+import { constructWebhookEvent, stripe, STRIPE_WEBHOOK_SECRET } from '@/lib/stripe';
 import { completeCreditPurchase, markTokenUsed } from '@/lib/supabase';
 import Stripe from 'stripe';
 
 export async function POST(request: NextRequest) {
+  // Validate required configuration
   if (!stripe.get()) {
     console.error('Stripe not configured');
     return NextResponse.json(
       { error: 'Stripe not configured' },
+      { status: 500 }
+    );
+  }
+
+  if (!STRIPE_WEBHOOK_SECRET) {
+    console.error('STRIPE_WEBHOOK_SECRET not configured');
+    return NextResponse.json(
+      { error: 'Webhook secret not configured' },
+      { status: 500 }
+    );
+  }
+
+  // Validate WEBHOOK_SECRET for bot communication
+  const webhookSecret = process.env.WEBHOOK_SECRET;
+  if (!webhookSecret) {
+    console.error('WEBHOOK_SECRET not configured');
+    return NextResponse.json(
+      { error: 'Internal webhook secret not configured' },
       { status: 500 }
     );
   }
@@ -63,7 +82,7 @@ export async function POST(request: NextRequest) {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${process.env.WEBHOOK_SECRET || ''}`,
+                'Authorization': `Bearer ${webhookSecret}`,
               },
               body: JSON.stringify({
                 userId: result.userId,

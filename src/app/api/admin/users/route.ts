@@ -1,5 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { hasValidAdminSession, getSessionCookieName } from '@/lib/admin-auth';
+import { checkRateLimit, getClientIdentifier, RATE_LIMITS, rateLimitHeaders } from '@/lib/ratelimit';
 
 function getSupabase() {
   const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -12,7 +14,25 @@ function getSupabase() {
   return createClient(supabaseUrl, supabaseKey);
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Check rate limit
+  const clientId = getClientIdentifier(request);
+  const rateLimit = checkRateLimit(`admin:${clientId}`, RATE_LIMITS.admin);
+
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429, headers: rateLimitHeaders(rateLimit) }
+    );
+  }
+
+  // Verify admin authentication
+  const sessionCookie = request.cookies.get(getSessionCookieName());
+  const isAuthenticated = await hasValidAdminSession(sessionCookie?.value);
+
+  if (!isAuthenticated) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   try {
     const supabase = getSupabase();
 

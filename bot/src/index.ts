@@ -4,6 +4,20 @@ import { bot, createWebhookHandler } from './bot.js';
 import { processAllDailyNotifications } from './services/daily.js';
 import { addCredits } from './services/credits.js';
 
+// Validate required secrets at startup
+const CRON_SECRET = process.env.CRON_SECRET;
+const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
+
+if (!CRON_SECRET) {
+  console.error('FATAL: CRON_SECRET environment variable is required');
+  process.exit(1);
+}
+
+if (!WEBHOOK_SECRET) {
+  console.error('FATAL: WEBHOOK_SECRET environment variable is required');
+  process.exit(1);
+}
+
 const app = new Hono();
 
 const PORT = process.env.PORT || 3000;
@@ -19,15 +33,11 @@ app.get('/health', (c) => {
 });
 
 // Cron endpoint for daily push notifications
-const CRON_SECRET = process.env.CRON_SECRET;
-
 app.get('/api/cron/daily-push', async (c) => {
-  // Verify cron secret if configured
-  if (CRON_SECRET) {
-    const authHeader = c.req.header('Authorization');
-    if (authHeader !== `Bearer ${CRON_SECRET}`) {
-      return c.json({ error: 'Unauthorized' }, 401);
-    }
+  // Always require auth - CRON_SECRET validated at startup
+  const authHeader = c.req.header('Authorization');
+  if (authHeader !== `Bearer ${CRON_SECRET}`) {
+    return c.json({ error: 'Unauthorized' }, 401);
   }
 
   try {
@@ -47,13 +57,10 @@ app.get('/api/cron/daily-push', async (c) => {
 
 // API endpoint to add credits (called by Stripe webhook)
 app.post('/api/credits/add', async (c) => {
-  // Verify webhook secret
-  const webhookSecret = process.env.WEBHOOK_SECRET;
-  if (webhookSecret) {
-    const authHeader = c.req.header('Authorization');
-    if (authHeader !== `Bearer ${webhookSecret}`) {
-      return c.json({ error: 'Unauthorized' }, 401);
-    }
+  // Always require auth - WEBHOOK_SECRET validated at startup
+  const authHeader = c.req.header('Authorization');
+  if (authHeader !== `Bearer ${WEBHOOK_SECRET}`) {
+    return c.json({ error: 'Unauthorized' }, 401);
   }
 
   try {

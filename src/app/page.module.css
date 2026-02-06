@@ -400,8 +400,38 @@
   box-shadow: 0 12px 35px rgba(255, 105, 180, 0.5) !important;
 }
 
+.bottomRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.discordCard {
+  background: linear-gradient(135deg, #5865F2, #7289da) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.discordCard .linkTitle,
+.discordCard .linkSub {
+  color: white !important;
+}
+
+.discordCard svg {
+  color: white !important;
+}
+
+.discordCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 35px rgba(88, 101, 242, 0.5) !important;
+}
+
 @media (max-width: 768px) {
   .topRow {
+    grid-template-columns: 1fr;
+  }
+
+  .bottomRow {
     grid-template-columns: 1fr;
   }
 }

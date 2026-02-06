@@ -1,18 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validatePurchaseToken, getCreditPackages, getTokenByString, createCreditPurchase } from '@/lib/supabase';
 import { createCheckoutSession } from '@/lib/stripe';
+import { checkoutSchema, validate } from '@/lib/validation';
+import { checkRateLimit, getClientIdentifier, RATE_LIMITS, rateLimitHeaders } from '@/lib/ratelimit';
 
 export async function POST(request: NextRequest) {
+  // Check rate limit
+  const clientId = getClientIdentifier(request);
+  const rateLimit = checkRateLimit(`checkout:${clientId}`, RATE_LIMITS.checkout);
+
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429, headers: rateLimitHeaders(rateLimit) }
+    );
+  }
+
   try {
     const body = await request.json();
-    const { token, packageId } = body;
 
-    if (!token || !packageId) {
+    // Validate request body
+    const validationResult = validate(checkoutSchema, body);
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Missing token or packageId' },
+        { error: validationResult.error },
         { status: 400 }
       );
     }
+
+    const { token, packageId } = validationResult.data;
 
     // Validate token
     const validation = await validatePurchaseToken(token);
@@ -47,7 +63,7 @@ export async function POST(request: NextRequest) {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://itsnadchos.com';
 
     // Create Stripe checkout session
-    const checkoutUrl = await createCheckoutSession({
+    const checkoutResult = await createCheckoutSession({
       userId: validation.userId,
       tokenId: tokenRecord.id,
       packageId: selectedPackage.id,
@@ -58,17 +74,17 @@ export async function POST(request: NextRequest) {
       cancelUrl: `${baseUrl}/buy/cancel`,
     });
 
-    // Create pending purchase record
+    // Create pending purchase record using proper session ID
     await createCreditPurchase({
       userId: validation.userId,
       packageId: selectedPackage.id,
       tokenId: tokenRecord.id,
-      stripeSessionId: checkoutUrl.split('cs_')[1]?.split('/')[0] || '',
+      stripeSessionId: checkoutResult.sessionId,
       amountCents: selectedPackage.price_cents,
       credits: selectedPackage.credits,
     });
 
-    return NextResponse.json({ url: checkoutUrl });
+    return NextResponse.json({ url: checkoutResult.url });
   } catch (error) {
     console.error('Checkout error:', error);
     return NextResponse.json(

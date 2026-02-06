@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, Image, BarChart3, MessageCircle } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { LayoutDashboard, Users, Image, BarChart3, MessageCircle, LogOut } from "lucide-react";
 import styles from "./admin.module.css";
 
 const navItems = [
@@ -19,6 +19,17 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/auth/logout", { method: "POST" });
+      router.push("/admin/login");
+      router.refresh();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
     <div className={styles.adminLayout}>
@@ -50,6 +61,10 @@ export default function AdminLayout({
           <Link href="/" className={styles.backLink}>
             ← Back to Site
           </Link>
+          <button onClick={handleLogout} className={styles.logoutButton}>
+            <LogOut size={16} />
+            <span>Logout</span>
+          </button>
         </div>
       </aside>
 

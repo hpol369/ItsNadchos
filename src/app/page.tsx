@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Heart, MessageCircle, ArrowRight, Trophy } from "lucide-react";
-import { FaInstagram, FaTiktok, FaTelegram } from "react-icons/fa";
+import { FaInstagram, FaTiktok, FaTelegram, FaDiscord } from "react-icons/fa";
 import { SiKick } from "react-icons/si";
 import confetti from "canvas-confetti";
 import styles from "./page.module.css";
@@ -14,6 +14,7 @@ export default function Home() {
 
   // Telegram bot link - update this with your actual bot username
   const TELEGRAM_BOT_URL = "https://t.me/ItsNadchos_bot";
+  const DISCORD_INVITE_URL = "https://discord.gg/6CvJWM6jGR";
 
   const popNacho = (e: React.MouseEvent, index: number) => {
     // Prevent double triggers if already popped
@@ -166,14 +167,25 @@ export default function Home() {
             </Link>
           </div>
 
-          <Link href={TELEGRAM_BOT_URL} target="_blank" className={`${styles.linkCard} ${styles.telegramCard}`}>
-            <FaTelegram size={28} />
-            <div>
-              <span className={styles.linkTitle}>Telegram</span>
-              <span className={styles.linkSub}>Chat with me 1-on-1!</span>
-            </div>
-            <ArrowRight size={20} />
-          </Link>
+          <div className={styles.bottomRow}>
+            <Link href={TELEGRAM_BOT_URL} target="_blank" className={`${styles.linkCard} ${styles.telegramCard}`}>
+              <FaTelegram size={28} />
+              <div>
+                <span className={styles.linkTitle}>Telegram</span>
+                <span className={styles.linkSub}>Chat with me 1-on-1!</span>
+              </div>
+              <ArrowRight size={20} />
+            </Link>
+
+            <Link href={DISCORD_INVITE_URL} target="_blank" className={`${styles.linkCard} ${styles.discordCard}`}>
+              <FaDiscord size={28} />
+              <div>
+                <span className={styles.linkTitle}>Discord</span>
+                <span className={styles.linkSub}>Join the community!</span>
+              </div>
+              <ArrowRight size={20} />
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -192,6 +204,7 @@ export default function Home() {
         <div className={styles.footerSocials}>
           <Link href="https://kick.com/itsnadchos" target="_blank"><SiKick size={22} /></Link>
           <Link href={TELEGRAM_BOT_URL} target="_blank"><FaTelegram size={22} /></Link>
+          <Link href={DISCORD_INVITE_URL} target="_blank"><FaDiscord size={22} /></Link>
           <Link href="https://instagram.com/itsnadchos" target="_blank"><FaInstagram size={22} /></Link>
           <Link href="https://tiktok.com/@itsnadchos" target="_blank"><FaTiktok size={22} /></Link>
         </div>
