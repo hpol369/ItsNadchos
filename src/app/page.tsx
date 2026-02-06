@@ -129,11 +129,11 @@ export default function Home() {
         <div className={styles.floatingGallery}>
           <div className={`${styles.floatingPhoto} ${styles.photo1}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/photos/photo1.png" alt="Nadchos" />
+            <img src="/photos/photo2.png" alt="Nadchos" />
           </div>
           <div className={`${styles.floatingPhoto} ${styles.photo2}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/photos/photo2.png" alt="Nadchos" />
+            <img src="/photos/photo1.png" alt="Nadchos" />
           </div>
         </div>
       </section>
