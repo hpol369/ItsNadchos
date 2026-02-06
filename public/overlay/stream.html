@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>ItsNadchos Stream Overlay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      font-family: 'Fredoka', sans-serif;
+      background: transparent;
+    }
+
+    .overlay {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+    }
+
+    /* Background glow effects */
+    .bg-glow {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+    }
+
+    .glow-orb.pink1 {
+      width: 400px;
+      height: 400px;
+      background: #ff1493;
+      top: -100px;
+      left: -100px;
+    }
+
+    .glow-orb.pink2 {
+      width: 300px;
+      height: 300px;
+      background: #ff69b4;
+      bottom: -50px;
+      left: 200px;
+    }
+
+    .glow-orb.gold1 {
+      width: 250px;
+      height: 250px;
+      background: #ffd700;
+      top: 200px;
+      right: 400px;
+      opacity: 0.3;
+    }
+
+    .glow-orb.pink3 {
+      width: 350px;
+      height: 350px;
+      background: #ff1493;
+      bottom: 100px;
+      right: -100px;
+    }
+
+    /* Top Header Bar */
+    .top-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: linear-gradient(135deg, #ff1493, #ff69b4, #ff1493);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      box-shadow: 0 4px 30px rgba(255, 20, 147, 0.6);
+      z-index: 10;
+    }
+
+    .top-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+
+    .logo {
+      font-size: 36px;
+      font-weight: 700;
+      color: white;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 215, 0, 0.5);
+      letter-spacing: 1px;
+    }
+
+    .tagline {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
+      margin-top: -2px;
+    }
+
+    .tagline span {
+      color: #ffd700;
+      font-style: italic;
+    }
+
+    /* Main Game Frame */
+    .game-frame {
+      position: absolute;
+      top: 85px;
+      left: 25px;
+      width: 1400px;
+      height: 910px;
+      border: 5px solid transparent;
+      border-image: linear-gradient(135deg, #ffd700, #ff69b4, #ffd700) 1;
+      border-radius: 15px;
+      box-shadow:
+        0 0 30px rgba(255, 105, 180, 0.5),
+        inset 0 0 30px rgba(255, 105, 180, 0.1);
+    }
+
+    /* Decorative corners */
+    .corner {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      pointer-events: none;
+    }
+
+    .corner svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .corner.top-left {
+      top: 75px;
+      left: 15px;
+    }
+
+    .corner.top-right-frame {
+      top: 75px;
+      left: 1405px;
+      transform: scaleX(-1);
+    }
+
+    .corner.bottom-left {
+      bottom: 75px;
+      left: 15px;
+      transform: scaleY(-1);
+    }
+
+    .corner.bottom-right-frame {
+      bottom: 75px;
+      left: 1405px;
+      transform: scale(-1, -1);
+    }
+
+    /* Webcam Frame */
+    .webcam-frame {
+      position: absolute;
+      top: 85px;
+      right: 25px;
+      width: 440px;
+      height: 340px;
+      border: 5px solid transparent;
+      border-image: linear-gradient(135deg, #ffd700, #ff69b4, #ffd700) 1;
+      border-radius: 15px;
+      box-shadow:
+        0 0 25px rgba(255, 105, 180, 0.6),
+        inset 0 0 20px rgba(255, 105, 180, 0.1);
+    }
+
+    .webcam-label {
+      position: absolute;
+      bottom: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #ff1493, #ff69b4);
+      color: white;
+      padding: 8px 25px;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(255, 20, 147, 0.5);
+      white-space: nowrap;
+    }
+
+    /* Bottom Bar */
+    .bottom-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 55px;
+      background: linear-gradient(135deg, rgba(20, 5, 15, 0.95), rgba(40, 15, 30, 0.95));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      border-top: 3px solid #ff69b4;
+      box-shadow: 0 -4px 20px rgba(255, 105, 180, 0.4);
+      z-index: 10;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .social-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .social-dot:nth-child(1) { background: #ff4444; animation-delay: 0s; }
+    .social-dot:nth-child(2) { background: #ffaa00; animation-delay: 0.3s; }
+    .social-dot:nth-child(3) { background: #44ff44; animation-delay: 0.6s; }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.8; }
+    }
+
+    .bottom-text {
+      font-size: 22px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .bottom-text .brand {
+      color: #ff69b4;
+    }
+
+    /* Floating decorations */
+    .floating {
+      position: absolute;
+      pointer-events: none;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(5deg); }
+    }
+
+    .coin {
+      width: 45px;
+      height: 45px;
+      background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
+      border-radius: 50%;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+      border: 3px solid #fff8dc;
+    }
+
+    .coin::after {
+      content: '$';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 22px;
+      font-weight: bold;
+      color: #8b6914;
+    }
+
+    .nacho {
+      font-size: 40px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    }
+
+    .floating:nth-child(1) { top: 120px; left: 1460px; animation-delay: 0s; }
+    .floating:nth-child(2) { top: 500px; left: 1480px; animation-delay: 0.5s; }
+    .floating:nth-child(3) { top: 750px; left: 1470px; animation-delay: 1s; }
+    .floating:nth-child(4) { top: 200px; left: 5px; animation-delay: 1.5s; }
+    .floating:nth-child(5) { top: 600px; left: 0px; animation-delay: 2s; }
+    .floating:nth-child(6) { bottom: 80px; left: 1500px; animation-delay: 0.8s; }
+    .floating:nth-child(7) { bottom: 120px; left: 1550px; animation-delay: 1.3s; }
+    .floating:nth-child(8) { top: 450px; left: 1520px; animation-delay: 1.8s; }
+
+    /* Sparkles */
+    .sparkle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      animation: sparkle 2s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+
+    .sparkle:nth-child(1) { top: 100px; left: 100px; animation-delay: 0s; }
+    .sparkle:nth-child(2) { top: 300px; left: 1350px; animation-delay: 0.5s; }
+    .sparkle:nth-child(3) { top: 800px; left: 200px; animation-delay: 1s; }
+    .sparkle:nth-child(4) { top: 150px; left: 800px; animation-delay: 1.5s; }
+    .sparkle:nth-child(5) { top: 600px; left: 1200px; animation-delay: 2s; }
+    .sparkle:nth-child(6) { top: 400px; left: 50px; animation-delay: 0.3s; }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <!-- Background Glows -->
+    <div class="bg-glow">
+      <div class="glow-orb pink1"></div>
+      <div class="glow-orb pink2"></div>
+      <div class="glow-orb gold1"></div>
+      <div class="glow-orb pink3"></div>
+    </div>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="logo">ItsNadchos</div>
+      <div class="tagline">don't love the game, love the <span>player</span></div>
+    </div>
+
+    <!-- Main Game Frame -->
+    <div class="game-frame"></div>
+
+    <!-- Corner Decorations -->
+    <div class="corner top-left">
+      <svg viewBox="0 0 80 80" fill="none">
+        <path d="M5 75 L5 20 Q5 5 20 5 L75 5" stroke="url(#gold)" stroke-width="4" fill="none"/>
+        <circle cx="15" cy="15" r="8" fill="#ffd700"/>
+        <defs>
+          <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#ffd700"/>
+            <stop offset="50%" style="stop-color:#ff69b4"/>
+            <stop offset="100%" style="stop-color:#ffd700"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="corner top-right-frame">
+      <svg viewBox="0 0 80 80" fill="none">
+        <path d="M5 75 L5 20 Q5 5 20 5 L75 5" stroke="url(#gold2)" stroke-width="4" fill="none"/>
+        <circle cx="15" cy="15" r="8" fill="#ffd700"/>
+        <defs>
+          <linearGradient id="gold2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#ffd700"/>
+            <stop offset="50%" style="stop-color:#ff69b4"/>
+            <stop offset="100%" style="stop-color:#ffd700"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="corner bottom-left">
+      <svg viewBox="0 0 80 80" fill="none">
+        <path d="M5 75 L5 20 Q5 5 20 5 L75 5" stroke="url(#gold3)" stroke-width="4" fill="none"/>
+        <circle cx="15" cy="15" r="8" fill="#ffd700"/>
+        <defs>
+          <linearGradient id="gold3" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#ffd700"/>
+            <stop offset="50%" style="stop-color:#ff69b4"/>
+            <stop offset="100%" style="stop-color:#ffd700"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="corner bottom-right-frame">
+      <svg viewBox="0 0 80 80" fill="none">
+        <path d="M5 75 L5 20 Q5 5 20 5 L75 5" stroke="url(#gold4)" stroke-width="4" fill="none"/>
+        <circle cx="15" cy="15" r="8" fill="#ffd700"/>
+        <defs>
+          <linearGradient id="gold4" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#ffd700"/>
+            <stop offset="50%" style="stop-color:#ff69b4"/>
+            <stop offset="100%" style="stop-color:#ffd700"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <!-- Webcam Frame -->
+    <div class="webcam-frame">
+      <div class="webcam-label">@ItsNadchos</div>
+    </div>
+
+    <!-- Floating Decorations -->
+    <div class="floating coin" style="top: 450px; right: 30px;"></div>
+    <div class="floating coin" style="top: 550px; right: 80px; width: 35px; height: 35px;"></div>
+    <div class="floating coin" style="top: 700px; right: 50px;"></div>
+    <div class="floating nacho" style="top: 500px; right: 20px;">🌮</div>
+    <div class="floating nacho" style="top: 650px; right: 100px; font-size: 30px;">🌮</div>
+    <div class="floating coin" style="bottom: 100px; right: 40px; width: 30px; height: 30px;"></div>
+    <div class="floating nacho" style="bottom: 150px; right: 120px; font-size: 35px;">🌮</div>
+    <div class="floating coin" style="top: 480px; right: 130px; width: 25px; height: 25px;"></div>
+
+    <!-- Sparkles -->
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+
+    <!-- Bottom Bar -->
+    <div class="bottom-bar">
+      <div class="social-icons">
+        <div class="social-dot"></div>
+        <div class="social-dot"></div>
+        <div class="social-dot"></div>
+      </div>
+      <div class="bottom-text"><span class="brand">ItsNadchos</span> on all socials</div>
+    </div>
+  </div>
+</body>
+</html>
