@@ -110,6 +110,10 @@ export default function Home() {
             <MessageCircle size={20} />
             Come say Hi!
           </Link>
+          <Link href={DISCORD_INVITE_URL} target="_blank" className={styles.btnPrimary}>
+            <FaDiscord size={20} />
+            Join Discord
+          </Link>
           <Link href="https://kick.com/itsnadchos" target="_blank" className={styles.btnSecondary}>
             <SiKick size={20} />
             Watch Stream
