@@ -100,7 +100,7 @@ export default function Home() {
         <div className={styles.heroImageWrapper}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/photos/hero.png"
+            src="/photos/photo2.png"
             alt="ItsNadchos"
             className={styles.heroImage}
           />
@@ -129,7 +129,7 @@ export default function Home() {
         <div className={styles.floatingGallery}>
           <div className={`${styles.floatingPhoto} ${styles.photo1}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/photos/photo2.png" alt="Nadchos" />
+            <img src="/photos/hero.png" alt="Nadchos" />
           </div>
           <div className={`${styles.floatingPhoto} ${styles.photo2}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
