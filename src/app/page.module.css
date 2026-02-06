@@ -426,6 +426,26 @@
   box-shadow: 0 12px 35px rgba(88, 101, 242, 0.5) !important;
 }
 
+.twitchCard {
+  background: linear-gradient(135deg, #9146FF, #772ce8) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.twitchCard .linkTitle,
+.twitchCard .linkSub {
+  color: white !important;
+}
+
+.twitchCard svg {
+  color: white !important;
+}
+
+.twitchCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 35px rgba(145, 70, 255, 0.5) !important;
+}
+
 @media (max-width: 768px) {
   .topRow {
     grid-template-columns: 1fr;

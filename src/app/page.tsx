@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Heart, MessageCircle, ArrowRight, Trophy } from "lucide-react";
-import { FaInstagram, FaTiktok, FaTelegram, FaDiscord } from "react-icons/fa";
+import { FaInstagram, FaTiktok, FaTelegram, FaDiscord, FaTwitch } from "react-icons/fa";
 import { SiKick } from "react-icons/si";
 import confetti from "canvas-confetti";
 import styles from "./page.module.css";
@@ -15,6 +15,7 @@ export default function Home() {
   // Telegram bot link - update this with your actual bot username
   const TELEGRAM_BOT_URL = "https://t.me/ItsNadchos_bot";
   const DISCORD_INVITE_URL = "https://discord.gg/6CvJWM6jGR";
+  const TWITCH_URL = "https://twitch.tv/itsnadchos";
 
   const popNacho = (e: React.MouseEvent, index: number) => {
     // Prevent double triggers if already popped
@@ -190,6 +191,15 @@ export default function Home() {
               <ArrowRight size={20} />
             </Link>
           </div>
+
+          <Link href={TWITCH_URL} target="_blank" className={`${styles.linkCard} ${styles.twitchCard}`}>
+            <FaTwitch size={28} />
+            <div>
+              <span className={styles.linkTitle}>Twitch</span>
+              <span className={styles.linkSub}>Watch me live!</span>
+            </div>
+            <ArrowRight size={20} />
+          </Link>
         </div>
       </section>
 
@@ -207,6 +217,7 @@ export default function Home() {
       <footer className={styles.footer}>
         <div className={styles.footerSocials}>
           <Link href="https://kick.com/itsnadchos" target="_blank"><SiKick size={22} /></Link>
+          <Link href={TWITCH_URL} target="_blank"><FaTwitch size={22} /></Link>
           <Link href={TELEGRAM_BOT_URL} target="_blank"><FaTelegram size={22} /></Link>
           <Link href={DISCORD_INVITE_URL} target="_blank"><FaDiscord size={22} /></Link>
           <Link href="https://instagram.com/itsnadchos" target="_blank"><FaInstagram size={22} /></Link>
