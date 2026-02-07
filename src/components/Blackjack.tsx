@@ -173,7 +173,7 @@ export default function Blackjack() {
             <div className={styles.dealerArea}>
                 <div className={styles.dealerBubble}>{dealerMessage}</div>
                 <Image
-                    src="/Nadhira5.jpg"
+                    src="/Nadchos3.jpg"
                     alt="Dealer Nadhira"
                     className={styles.dealerAvatar}
                     width={80}
