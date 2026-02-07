@@ -11,12 +11,12 @@ export default function FlappyNadhira() {
     const [highScore, setHighScore] = useState(0);
 
     // Game constants
-    const GRAVITY = 0.25; // Lighter gravity - more floaty
-    const JUMP = -6; // Gentler jump
-    const PIPE_SPEED = 3;
-    const PIPE_SPAWN_RATE = 90; // Frames between pipes
-    const FIRST_PIPE_DELAY = 150; // Extra time before first pipe
-    const PIPE_GAP = 140; // Space between pipes
+    const GRAVITY = 0.2; // Very light gravity - super floaty
+    const JUMP = -5; // Gentle jump
+    const PIPE_SPEED = 2.5; // Slower pipes
+    const PIPE_SPAWN_RATE = 110; // More time between pipes
+    const FIRST_PIPE_DELAY = 180; // Extra time before first pipe
+    const PIPE_GAP = 170; // Bigger gap - easier to fly through
 
     // Mutable game state refs for the loop
     const birdRef = useRef({ y: 200, velocity: 0, radius: 20 });
