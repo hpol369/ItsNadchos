@@ -71,27 +71,8 @@ export default function Blackjack() {
         }
     };
 
-    // Fix: Move dealerTurn definition BEFORE it's used in handleStand
-    const dealerTurn = useCallback((currentDeck: Card[], currentDealerHand: Card[]) => {
-        // Reveal hidden card
-        const hand = currentDealerHand.map(c => ({ ...c, hidden: false }));
-
-        let dScore = calculateScore(hand);
-        const deckCopy = [...currentDeck];
-
-        // Dealer hits on soft 17 (simplified: hits on < 17)
-        while (dScore < 17) {
-            const card = deckCopy.pop();
-            if (!card) break; // Should shuffle if empty
-            hand.push({ ...card, hidden: false });
-            dScore = calculateScore(hand);
-        }
-
-        setDealerHand(hand);
-        setDeck(deckCopy);
-
-        return { finalHand: hand, finalScore: dScore };
-    }, []);
+    // Helper for delays
+    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
     const handleHit = () => {
         const newDeck = [...deck];
@@ -108,10 +89,47 @@ export default function Blackjack() {
         }
     };
 
-    const handleStand = () => {
+    const handleStand = async () => {
         setGameState("DEALER_TURN");
-        const result = dealerTurn(deck, dealerHand);
-        handleGameOver("COMPARE", playerHand, result.finalHand);
+        setDealerMessage("Let me see... 🤔");
+
+        // Step 1: Reveal hidden card with suspense
+        await delay(800);
+        const revealedHand = dealerHand.map(c => ({ ...c, hidden: false }));
+        setDealerHand(revealedHand);
+
+        let currentHand = [...revealedHand];
+        let dScore = calculateScore(currentHand);
+        const deckCopy = [...deck];
+
+        await delay(600);
+
+        // Step 2: Dealer draws cards one by one
+        while (dScore < 17) {
+            setDealerMessage("I need another card...");
+            await delay(900);
+
+            const card = deckCopy.pop();
+            if (!card) break;
+
+            currentHand = [...currentHand, { ...card, hidden: false }];
+            setDealerHand(currentHand);
+            dScore = calculateScore(currentHand);
+
+            if (dScore > 21) {
+                setDealerMessage("No way! 😱");
+            } else if (dScore >= 17) {
+                setDealerMessage("That'll do.");
+            }
+
+            await delay(600);
+        }
+
+        setDeck(deckCopy);
+
+        // Step 3: Show result
+        await delay(400);
+        handleGameOver("COMPARE", playerHand, currentHand);
     };
 
     const handleGameOver = (reason: "BUST" | "BLACKJACK" | "COMPARE", pHand: Card[], dHand: Card[]) => {
