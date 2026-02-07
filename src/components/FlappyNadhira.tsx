@@ -10,33 +10,58 @@ export default function FlappyNadhira() {
     const [score, setScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
 
-    // Game constants
-    const GRAVITY = 0.2; // Very light gravity - super floaty
-    const JUMP = -5; // Gentle jump
-    const PIPE_SPEED = 2.5; // Slower pipes
-    const PIPE_SPAWN_RATE = 110; // More time between pipes
-    const FIRST_PIPE_DELAY = 180; // Extra time before first pipe
-    const PIPE_GAP = 170; // Bigger gap - easier to fly through
+    // Physics Constants - tuned for 60fps reference
+    // These value are multiplied by delta (1.0 at 60fps)
+    const GRAVITY = 0.4;
+    const JUMP = -7;
+    const PIPE_SPEED = 3;
+    const PIPE_SPAWN_INTERVAL = 1800; // ms
+    const FIRST_PIPE_DELAY = 2000; // ms
+    const PIPE_GAP = 160;
 
-    // Mutable game state refs for the loop
+    // Mutable game state
     const birdRef = useRef({ y: 200, velocity: 0, radius: 20 });
     const pipesRef = useRef<{ x: number; topHeight: number; passed: boolean }[]>([]);
     const frameRef = useRef(0);
     const animationRef = useRef<number>(0);
     const birdImgRef = useRef<HTMLImageElement | null>(null);
 
-    // Load High Score
+    // Load assets & high score
     useEffect(() => {
         const saved = localStorage.getItem("flappyNadhiraHighScore");
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (saved) setHighScore(parseInt(saved));
 
-        // Preload image
         const img = new Image();
         img.src = "/Nadhira5.jpg";
-        img.onload = () => {
-            birdImgRef.current = img;
+        img.onload = () => { birdImgRef.current = img; };
+
+        // Handle high-DPI scaling
+        const handleResize = () => {
+            const canvas = canvasRef.current;
+            if (!canvas) return;
+
+            // Get the display size
+            const displayWidth = Math.min(window.innerWidth - 32, 600); // Responsive width
+            const displayHeight = 400;
+
+            // Scale by DPR
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = displayWidth * dpr;
+            canvas.height = displayHeight * dpr;
+
+            // Normalize coordinate system to logical pixels
+            const ctx = canvas.getContext('2d');
+            if (ctx) ctx.scale(dpr, dpr);
+
+            // Style width/height must match display size
+            canvas.style.width = `${displayWidth}px`;
+            canvas.style.height = `${displayHeight}px`;
         };
+
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Initial setup
+
+        return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     const startGame = () => {
@@ -47,139 +72,125 @@ export default function FlappyNadhira() {
         frameRef.current = 0;
     };
 
-    const jump = () => {
+    const jump = useCallback(() => {
         if (gameState === "PLAYING") {
             birdRef.current.velocity = JUMP;
-        } else if (gameState === "START" || gameState === "GAME_OVER") {
-            // Optional: click to start handling if we want single-tap restart
-            // startGame(); // Delegated to button for now
         }
-    };
+    }, [gameState]);
 
     const gameOver = useCallback(() => {
         setGameState("GAME_OVER");
         if (animationRef.current) cancelAnimationFrame(animationRef.current);
-        if (score > highScore) {
+
+        // Check local storage directly to ensure we have latest, or trust state if sync
+        const currentHigh = parseInt(localStorage.getItem("flappyNadhiraHighScore") || "0");
+        if (score > currentHigh) {
             setHighScore(score);
             localStorage.setItem("flappyNadhiraHighScore", score.toString());
         }
-    }, [score, highScore]);
+    }, [score]);
 
     useEffect(() => {
         if (gameState !== "PLAYING") return;
 
         let lastTime = performance.now();
-        let gameTime = 0; // Total elapsed time in ms
+        let gameTime = 0;
         let lastPipeTime = 0;
-        const TARGET_FPS = 60;
-        const FRAME_TIME = 1000 / TARGET_FPS; // ~16.67ms
 
         const loop = (currentTime: number) => {
             const canvas = canvasRef.current;
             const ctx = canvas?.getContext("2d");
             if (!canvas || !ctx) return;
 
-            // Calculate delta time and normalize to 60fps
+            // Logical size (independent of pixel density)
+            const width = parseFloat(canvas.style.width);
+            const height = parseFloat(canvas.style.height);
+
+            // Time calculation
             const deltaTime = currentTime - lastTime;
             lastTime = currentTime;
-            const delta = deltaTime / FRAME_TIME; // 1.0 at 60fps, 0.5 at 120fps, 2.0 at 30fps
-            gameTime += deltaTime;
 
-            // --- UPDATE ---
+            // Cap delta time to prevent spiraling (max ~100ms or 10fps)
+            // This prevents the bird from teleporting through floor if tab was backgrounded
+            const safeDelta = Math.min(deltaTime, 100);
+
+            // Normalize to 60fps (16.67ms per frame)
+            const delta = safeDelta / 16.67;
+
+            gameTime += safeDelta;
             frameRef.current++;
 
-            // Bird Physics (scaled by delta)
-            birdRef.current.velocity += GRAVITY * delta;
-            birdRef.current.y += birdRef.current.velocity * delta;
+            // --- UPDATE PHYSICS ---
+            const bird = birdRef.current;
+            bird.velocity += GRAVITY * delta;
+            bird.y += bird.velocity * delta;
 
-            // Pipe Spawning (time-based instead of frame-based)
-            const FIRST_PIPE_TIME = 3000; // 3 seconds before first pipe
-            const PIPE_INTERVAL = 1800; // 1.8 seconds between pipes
-
-            if (gameTime > FIRST_PIPE_TIME && gameTime - lastPipeTime > PIPE_INTERVAL) {
+            // Pipe Logic
+            if (gameTime > FIRST_PIPE_DELAY && gameTime - lastPipeTime > PIPE_SPAWN_INTERVAL) {
                 lastPipeTime = gameTime;
+
                 const minPipe = 50;
-                const maxPipe = canvas.height - PIPE_GAP - 50;
+                const maxPipe = height - PIPE_GAP - 50;
                 const randomHeight = Math.floor(Math.random() * (maxPipe - minPipe + 1)) + minPipe;
+
                 pipesRef.current.push({
-                    x: canvas.width,
+                    x: width,
                     topHeight: randomHeight,
                     passed: false
                 });
             }
 
-            // Pipe Movement (scaled by delta)
-            pipesRef.current.forEach(pipe => {
+            // Move Pipes
+            for (let i = pipesRef.current.length - 1; i >= 0; i--) {
+                const pipe = pipesRef.current[i];
                 pipe.x -= PIPE_SPEED * delta;
-            });
 
-            // Remove off-screen pipes
-            if (pipesRef.current.length > 0 && pipesRef.current[0].x < -60) {
-                pipesRef.current.shift();
+                // Remove if offscreen
+                if (pipe.x < -60) {
+                    pipesRef.current.splice(i, 1);
+                }
             }
 
-            // Collision Check
-            const bird = birdRef.current;
-
-            // Bounds (Floor/Ceiling)
-            if (bird.y + bird.radius >= canvas.height || bird.y - bird.radius <= 0) {
+            // --- COLLISION ---
+            // Floor/Ceiling
+            if (bird.y + bird.radius >= height || bird.y - bird.radius <= 0) {
                 gameOver();
                 return;
             }
 
             // Pipes
-            pipesRef.current.forEach(pipe => {
-                // Hit detection (AABB vs Circle approx)
-                const pipeWidth = 50;
-
-                // Check if within pipe horizontal area
-                if (bird.radius + 10 + pipe.x > pipe.x && pipe.x < pipe.x + pipeWidth + bird.radius) {
-                    // Rough horizontal overlap
-                    // Check vertical: Hit TOP pipe OR Hit BOTTOM pipe
-                    if (bird.y - bird.radius < pipe.topHeight || bird.y + bird.radius > pipe.topHeight + PIPE_GAP) {
-                        // Precise hitbox check not strictly needed for this simple version, but let's be fair
-                        // Use simple box check for now
-                        if (bird.y < pipe.topHeight + bird.radius || bird.y > pipe.topHeight + PIPE_GAP - bird.radius) {
-                            // Only die if we are actually INSIDE the x-range purely
-                            if (pipe.x < 100 && pipe.x + pipeWidth > 60) { // Approx bird x is usually center or fixed
-                                // Actually, let's fix bird X
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Better Collision: Bird is fixed at X = 80 (visual) but we draw it there.
-            // Let's assume Bird X center is 80.
+            // Bird X is fixed at 80px visual
             const birdX = 80;
+            const pad = 6; // slightly forgiving hitbox
 
             for (const pipe of pipesRef.current) {
                 const pipeW = 50;
 
                 // Horizontal overlap
-                if (birdX + bird.radius > pipe.x && birdX - bird.radius < pipe.x + pipeW) {
-                    // Vertical overlap (Collision with pipe material)
-                    if (bird.y - bird.radius < pipe.topHeight || bird.y + bird.radius > pipe.topHeight + PIPE_GAP) {
+                // Bird right > Pipe left AND Bird left < Pipe right
+                if (birdX + bird.radius - pad > pipe.x && birdX - bird.radius + pad < pipe.x + pipeW) {
+                    // Vertical overlap
+                    // Bird Top < Pipe Top Height OR Bird Bottom > Pipe Bottom Start
+                    if (bird.y - bird.radius + pad < pipe.topHeight ||
+                        bird.y + bird.radius - pad > pipe.topHeight + PIPE_GAP) {
                         gameOver();
                         return;
                     }
                 }
 
-                // Score update
+                // Score
                 if (!pipe.passed && birdX > pipe.x + pipeW) {
                     setScore(s => s + 1);
                     pipe.passed = true;
                 }
             }
 
-
             // --- DRAW ---
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Background (Sky is CSS, maybe add clouds here if we want)
+            // We use the scaled context, so we draw in logical pixels (0..width, 0..height)
+            ctx.clearRect(0, 0, width, height);
 
             // Pipes
-            ctx.fillStyle = "#ff5c8d"; // Pink pipe
+            ctx.fillStyle = "#ff5c8d";
             ctx.strokeStyle = "#fff";
             ctx.lineWidth = 3;
 
@@ -192,20 +203,20 @@ export default function FlappyNadhira() {
 
                 // Bottom Pipe
                 const bottomY = pipe.topHeight + PIPE_GAP;
-                ctx.fillRect(pipe.x, bottomY, w, canvas.height - bottomY);
-                ctx.strokeRect(pipe.x, bottomY, w, canvas.height - bottomY);
+                const bottomH = Math.max(0, height - bottomY); // Ensure valid height
+                ctx.fillRect(pipe.x, bottomY, w, bottomH);
+                ctx.strokeRect(pipe.x, bottomY, w, bottomH);
 
-                // Optional: Decorate pipe caps
-                ctx.fillStyle = "#ffe4ec"; // Lighter pink details
-                ctx.fillRect(pipe.x - 2, pipe.topHeight - 20, w + 4, 20); // Top Cap
-                ctx.fillRect(pipe.x - 2, bottomY, w + 4, 20); // Bottom Cap
-                ctx.fillStyle = "#ff5c8d"; // Reset
+                // Caps
+                ctx.fillStyle = "#ffe4ec";
+                ctx.fillRect(pipe.x - 2, pipe.topHeight - 20, w + 4, 20);
+                ctx.fillRect(pipe.x - 2, bottomY, w + 4, 20);
+                ctx.fillStyle = "#ff5c8d";
             });
 
             // Bird
             ctx.save();
             ctx.translate(birdX, bird.y);
-            // Rotate based on velocity
             const rotation = Math.min(Math.PI / 4, Math.max(-Math.PI / 4, (bird.velocity * 0.1)));
             ctx.rotate(rotation);
 
@@ -214,14 +225,12 @@ export default function FlappyNadhira() {
                 ctx.arc(0, 0, bird.radius, 0, Math.PI * 2);
                 ctx.clip();
                 ctx.drawImage(birdImgRef.current, -bird.radius, -bird.radius, bird.radius * 2, bird.radius * 2);
-                // Border
                 ctx.beginPath();
                 ctx.arc(0, 0, bird.radius, 0, Math.PI * 2);
                 ctx.strokeStyle = "white";
                 ctx.lineWidth = 3;
                 ctx.stroke();
             } else {
-                // Fallback
                 ctx.beginPath();
                 ctx.arc(0, 0, bird.radius, 0, Math.PI * 2);
                 ctx.fillStyle = "#FFD700";
@@ -229,14 +238,10 @@ export default function FlappyNadhira() {
             }
             ctx.restore();
 
-            // Floor
-            // (Handled by CSS border but we check collision against height)
-
             animationRef.current = requestAnimationFrame(loop);
         };
 
         animationRef.current = requestAnimationFrame(loop);
-
         return () => cancelAnimationFrame(animationRef.current);
     }, [gameState, gameOver]);
 
@@ -244,11 +249,17 @@ export default function FlappyNadhira() {
         <div className={styles.container}>
             <canvas
                 ref={canvasRef}
-                width={600}
-                height={400}
                 className={styles.canvas}
-                onMouseDown={jump}
-                onTouchStart={(e) => { e.preventDefault(); jump(); }} // Prevent scrolling
+                onMouseDown={(e) => {
+                    // Only jump if primary button
+                    if (e.button === 0) jump();
+                }}
+                onTouchStart={(e) => {
+                    e.preventDefault(); // Prevent scrolling
+                    // prevent ghost clicks if needed, but usually e.preventDefault is enough
+                    jump();
+                }}
+                style={{ touchAction: 'none' }} // Critical for mobile
             />
 
             {gameState === "PLAYING" && (
@@ -263,6 +274,9 @@ export default function FlappyNadhira() {
                         <Play size={24} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '8px' }} />
                         Start Game
                     </button>
+                    <p style={{ marginTop: '1rem', fontSize: '0.9rem', opacity: 0.8 }}>
+                        Tap or Click to Jump
+                    </p>
                 </div>
             )}
 
