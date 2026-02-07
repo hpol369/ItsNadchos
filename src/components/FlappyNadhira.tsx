@@ -68,22 +68,36 @@ export default function FlappyNadhira() {
     useEffect(() => {
         if (gameState !== "PLAYING") return;
 
-        const loop = () => {
+        let lastTime = performance.now();
+        let gameTime = 0; // Total elapsed time in ms
+        let lastPipeTime = 0;
+        const TARGET_FPS = 60;
+        const FRAME_TIME = 1000 / TARGET_FPS; // ~16.67ms
+
+        const loop = (currentTime: number) => {
             const canvas = canvasRef.current;
             const ctx = canvas?.getContext("2d");
             if (!canvas || !ctx) return;
 
+            // Calculate delta time and normalize to 60fps
+            const deltaTime = currentTime - lastTime;
+            lastTime = currentTime;
+            const delta = deltaTime / FRAME_TIME; // 1.0 at 60fps, 0.5 at 120fps, 2.0 at 30fps
+            gameTime += deltaTime;
+
             // --- UPDATE ---
             frameRef.current++;
 
-            // Bird Physics
-            birdRef.current.velocity += GRAVITY;
-            birdRef.current.y += birdRef.current.velocity;
+            // Bird Physics (scaled by delta)
+            birdRef.current.velocity += GRAVITY * delta;
+            birdRef.current.y += birdRef.current.velocity * delta;
 
-            // Pipe Spawning (delay first pipe for easier start)
-            const shouldSpawnPipe = frameRef.current > FIRST_PIPE_DELAY &&
-                (frameRef.current - FIRST_PIPE_DELAY) % PIPE_SPAWN_RATE === 0;
-            if (shouldSpawnPipe) {
+            // Pipe Spawning (time-based instead of frame-based)
+            const FIRST_PIPE_TIME = 3000; // 3 seconds before first pipe
+            const PIPE_INTERVAL = 1800; // 1.8 seconds between pipes
+
+            if (gameTime > FIRST_PIPE_TIME && gameTime - lastPipeTime > PIPE_INTERVAL) {
+                lastPipeTime = gameTime;
                 const minPipe = 50;
                 const maxPipe = canvas.height - PIPE_GAP - 50;
                 const randomHeight = Math.floor(Math.random() * (maxPipe - minPipe + 1)) + minPipe;
@@ -94,9 +108,9 @@ export default function FlappyNadhira() {
                 });
             }
 
-            // Pipe Movement & Collision
+            // Pipe Movement (scaled by delta)
             pipesRef.current.forEach(pipe => {
-                pipe.x -= PIPE_SPEED;
+                pipe.x -= PIPE_SPEED * delta;
             });
 
             // Remove off-screen pipes
@@ -221,7 +235,7 @@ export default function FlappyNadhira() {
             animationRef.current = requestAnimationFrame(loop);
         };
 
-        loop();
+        animationRef.current = requestAnimationFrame(loop);
 
         return () => cancelAnimationFrame(animationRef.current);
     }, [gameState, gameOver]);
