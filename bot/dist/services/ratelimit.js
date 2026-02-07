@@ -7,13 +7,13 @@ export async function checkRateLimit(userId) {
     const now = new Date();
     // Get current rate limit record
     const { data: rateLimit } = await supabase
-        .from('rate_limits')
+        .from('nacho_rate_limits')
         .select('*')
         .eq('user_id', userId)
         .single();
     if (!rateLimit) {
         // Create rate limit record if it doesn't exist
-        await supabase.from('rate_limits').insert({ user_id: userId });
+        await supabase.from('nacho_rate_limits').insert({ user_id: userId });
         return { blocked: false, tempBlocked: false };
     }
     // Check if user is temporarily blocked
@@ -44,7 +44,7 @@ export async function checkRateLimit(userId) {
         if (newWarnings >= WARNINGS_BEFORE_TEMP_BLOCK) {
             // Temp block the user
             await supabase
-                .from('rate_limits')
+                .from('nacho_rate_limits')
                 .update({
                 warnings_count: newWarnings,
                 temp_blocked_until: new Date(now.getTime() + TEMP_BLOCK_DURATION_MS).toISOString(),
@@ -54,14 +54,14 @@ export async function checkRateLimit(userId) {
         }
         // Just warn
         await supabase
-            .from('rate_limits')
+            .from('nacho_rate_limits')
             .update({ warnings_count: newWarnings })
             .eq('user_id', userId);
         return { blocked: true, tempBlocked: false, reason: 'Rate limit exceeded' };
     }
     // Update counters
     await supabase
-        .from('rate_limits')
+        .from('nacho_rate_limits')
         .update({
         messages_this_minute: messagesThisMinute + 1,
         messages_this_hour: messagesThisHour + 1,
@@ -73,7 +73,7 @@ export async function checkRateLimit(userId) {
 }
 export async function resetRateLimits(userId) {
     await supabase
-        .from('rate_limits')
+        .from('nacho_rate_limits')
         .update({
         messages_this_minute: 0,
         messages_this_hour: 0,

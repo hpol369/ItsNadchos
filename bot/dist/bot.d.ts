@@ -1,6 +1,6 @@
 import { Bot } from 'grammy';
 export declare const bot: Bot<import("grammy").Context, import("grammy").Api<import("grammy").RawApi>>;
-export declare const handleWebhook: (c: {
+export declare const createWebhookHandler: () => (c: {
     req: {
         json: <T>() => Promise<T>;
         header: (header: string) => string | undefined;

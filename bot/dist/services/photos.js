@@ -3,7 +3,7 @@ const PAYMENT_PROVIDER_TOKEN = process.env.TELEGRAM_PAYMENT_PROVIDER_TOKEN || ''
 export async function showPhotoPacks(ctx) {
     // Get available packs
     const { data: packs } = await supabase
-        .from('photo_packs')
+        .from('nacho_photo_packs')
         .select('*')
         .eq('is_active', true)
         .order('sort_order', { ascending: true });
@@ -16,13 +16,13 @@ export async function showPhotoPacks(ctx) {
     let ownedPacks = new Set();
     if (telegramId) {
         const { data: user } = await supabase
-            .from('users')
+            .from('nacho_users')
             .select('id')
             .eq('telegram_id', telegramId)
             .single();
         if (user) {
             const { data: purchases } = await supabase
-                .from('purchases')
+                .from('nacho_purchases')
                 .select('pack_id')
                 .eq('user_id', user.id)
                 .eq('status', 'completed');
@@ -57,7 +57,7 @@ export async function showPhotoPacks(ctx) {
 export async function sendPackInvoice(ctx, userId, packId) {
     // Get pack details
     const { data: pack } = await supabase
-        .from('photo_packs')
+        .from('nacho_photo_packs')
         .select('*')
         .eq('id', packId)
         .eq('is_active', true)
@@ -68,7 +68,7 @@ export async function sendPackInvoice(ctx, userId, packId) {
     }
     // Check if user already owns this pack
     const { data: existingPurchase } = await supabase
-        .from('purchases')
+        .from('nacho_purchases')
         .select('id')
         .eq('user_id', userId)
         .eq('pack_id', packId)
@@ -106,7 +106,7 @@ export async function sendPackInvoice(ctx, userId, packId) {
 export async function deliverPhotos(ctx, userId, purchaseId, packId) {
     // Get photos for this pack
     const { data: photos } = await supabase
-        .from('photos')
+        .from('nacho_photos')
         .select('*')
         .eq('pack_id', packId)
         .eq('is_active', true)
@@ -120,14 +120,14 @@ export async function deliverPhotos(ctx, userId, purchaseId, packId) {
     for (const photo of photos) {
         try {
             const { data: urlData } = supabase.storage
-                .from('photos')
+                .from('nacho_photos')
                 .getPublicUrl(photo.storage_path);
             if (urlData?.publicUrl) {
                 await ctx.replyWithPhoto(urlData.publicUrl, {
                     caption: photo.description || undefined,
                 });
                 // Record delivery
-                await supabase.from('photo_deliveries').insert({
+                await supabase.from('nacho_photo_deliveries').insert({
                     purchase_id: purchaseId,
                     photo_id: photo.id,
                 });
@@ -141,7 +141,7 @@ export async function deliverPhotos(ctx, userId, purchaseId, packId) {
     }
     // Check if pack includes other tiers
     const { data: pack } = await supabase
-        .from('photo_packs')
+        .from('nacho_photo_packs')
         .select('includes_tiers')
         .eq('id', packId)
         .single();
@@ -149,7 +149,7 @@ export async function deliverPhotos(ctx, userId, purchaseId, packId) {
         for (const includedTier of pack.includes_tiers) {
             // Check if they don't already have this tier
             const { data: existingPurchase } = await supabase
-                .from('purchases')
+                .from('nacho_purchases')
                 .select('id')
                 .eq('user_id', userId)
                 .eq('pack_id', includedTier)
@@ -158,7 +158,7 @@ export async function deliverPhotos(ctx, userId, purchaseId, packId) {
             if (!existingPurchase) {
                 // Get photos from included tier
                 const { data: includedPhotos } = await supabase
-                    .from('photos')
+                    .from('nacho_photos')
                     .select('*')
                     .eq('pack_id', includedTier)
                     .eq('is_active', true)
@@ -168,13 +168,13 @@ export async function deliverPhotos(ctx, userId, purchaseId, packId) {
                     for (const photo of includedPhotos) {
                         try {
                             const { data: urlData } = supabase.storage
-                                .from('photos')
+                                .from('nacho_photos')
                                 .getPublicUrl(photo.storage_path);
                             if (urlData?.publicUrl) {
                                 await ctx.replyWithPhoto(urlData.publicUrl, {
                                     caption: photo.description || undefined,
                                 });
-                                await supabase.from('photo_deliveries').insert({
+                                await supabase.from('nacho_photo_deliveries').insert({
                                     purchase_id: purchaseId,
                                     photo_id: photo.id,
                                 });
@@ -193,7 +193,7 @@ export async function deliverPhotos(ctx, userId, purchaseId, packId) {
 export async function redeliverPhotos(ctx, userId) {
     // Get all completed purchases for user
     const { data: purchases } = await supabase
-        .from('purchases')
+        .from('nacho_purchases')
         .select('id, pack_id')
         .eq('user_id', userId)
         .eq('status', 'completed');

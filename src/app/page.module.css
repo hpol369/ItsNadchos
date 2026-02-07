@@ -608,6 +608,13 @@
   z-index: 1;
 }
 
+.gameSection {
+  padding: 2rem 1rem;
+  position: relative;
+  z-index: 20;
+  text-align: center;
+}
+
 .quoteCard {
   max-width: 700px;
   margin: 0 auto;

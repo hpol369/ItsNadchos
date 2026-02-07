@@ -1,5 +1,6 @@
 import { supabase } from '../db/client.js';
 import { ONBOARDING_MESSAGE } from '../utils/prompts.js';
+import { initializeCredits } from '../services/credits.js';
 export async function handleStart(ctx) {
     const telegramUser = ctx.from;
     if (!telegramUser) {
@@ -9,7 +10,7 @@ export async function handleStart(ctx) {
     try {
         // Check if user exists
         const { data: existingUser } = await supabase
-            .from('users')
+            .from('nacho_users')
             .select('id, is_blocked')
             .eq('telegram_id', telegramUser.id)
             .single();
@@ -20,7 +21,7 @@ export async function handleStart(ctx) {
         if (existingUser) {
             // Returning user - reset conversation state to free chat
             await supabase
-                .from('conversation_state')
+                .from('nacho_conversation_state')
                 .update({ current_state: 'free_chat' })
                 .eq('user_id', existingUser.id);
             await ctx.reply("welcome back! 💕 missed you, what's new?");
@@ -28,7 +29,7 @@ export async function handleStart(ctx) {
         }
         // Create new user
         const { data: newUser, error: userError } = await supabase
-            .from('users')
+            .from('nacho_users')
             .insert({
             telegram_id: telegramUser.id,
             username: telegramUser.username || null,
@@ -45,17 +46,19 @@ export async function handleStart(ctx) {
             return;
         }
         // Create conversation state
-        await supabase.from('conversation_state').insert({
+        await supabase.from('nacho_conversation_state').insert({
             user_id: newUser.id,
             current_state: 'onboarding',
             relationship_tier: 'free',
         });
         // Create rate limit record
-        await supabase.from('rate_limits').insert({
+        await supabase.from('nacho_rate_limits').insert({
             user_id: newUser.id,
         });
+        // Initialize credits for new user
+        await initializeCredits(newUser.id);
         // Store the onboarding message
-        await supabase.from('messages').insert({
+        await supabase.from('nacho_messages').insert({
             user_id: newUser.id,
             role: 'assistant',
             content: ONBOARDING_MESSAGE,

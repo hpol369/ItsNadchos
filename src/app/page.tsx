@@ -7,6 +7,7 @@ import { FaInstagram, FaTiktok, FaTelegram, FaDiscord, FaTwitch } from "react-ic
 import { SiKick } from "react-icons/si";
 import confetti from "canvas-confetti";
 import styles from "./page.module.css";
+import FlappyNadhira from "@/components/FlappyNadhira";
 
 export default function Home() {
   const [score, setScore] = useState(0);
@@ -93,7 +94,7 @@ export default function Home() {
         <div className={styles.heroContent}>
           <h1 className={styles.title}>ItsNadchos</h1>
           <p className={styles.tagline}>
-            don't love the game, love the <span>player</span>
+            don&apos;t love the game, love the <span>player</span>
           </p>
         </div>
 
@@ -192,10 +193,16 @@ export default function Home() {
       <section className={styles.quoteSection}>
         <div className={styles.quoteCard}>
           <p>
-            "It's not just about the game, it's about the <span>vibes</span> we create together."
+            &quot;It&apos;s not just about the game, it&apos;s about the <span>vibes</span> we create together.&quot;
           </p>
           <Heart className={styles.heartIcon} size={28} fill="currentColor" />
         </div>
+      </section>
+
+      {/* GAME SECTION */}
+      <section className={styles.gameSection}>
+        <h2 className={styles.sectionTitle}>Can you beat the high score?</h2>
+        <FlappyNadhira />
       </section>
 
       {/* FOOTER */}

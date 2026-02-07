@@ -8,7 +8,7 @@ export async function extractMemories(userId, messageId, userMessage) {
     }
     try {
         const response = await anthropic.messages.create({
-            model: 'claude-haiku-4-20250514',
+            model: 'claude-3-haiku-20240307',
             max_tokens: 200,
             system: `You extract memorable facts from messages. Return JSON array of memories or empty array if nothing notable.
 
@@ -44,13 +44,13 @@ Only extract clear, confident information. Skip vague statements.`,
             if (memory.confidence >= 0.7) {
                 // Check for duplicate memories
                 const { data: existing } = await supabase
-                    .from('user_memories')
+                    .from('nacho_user_memories')
                     .select('id')
                     .eq('user_id', userId)
                     .ilike('content', `%${memory.content}%`)
                     .limit(1);
                 if (!existing || existing.length === 0) {
-                    await supabase.from('user_memories').insert({
+                    await supabase.from('nacho_user_memories').insert({
                         user_id: userId,
                         memory_type: memory.type,
                         content: memory.content,
@@ -68,7 +68,7 @@ Only extract clear, confident information. Skip vague statements.`,
 }
 export async function getUserMemories(userId) {
     const { data } = await supabase
-        .from('user_memories')
+        .from('nacho_user_memories')
         .select('content')
         .eq('user_id', userId)
         .order('confidence', { ascending: false })

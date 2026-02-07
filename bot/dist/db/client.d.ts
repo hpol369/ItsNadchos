@@ -85,4 +85,72 @@ export interface RateLimit {
     warnings_count: number;
     temp_blocked_until: string | null;
 }
+export interface CreditPackage {
+    id: string;
+    name: string;
+    credits: number;
+    price_cents: number;
+    is_active: boolean;
+    created_at: string;
+}
+export interface UserCredits {
+    id: string;
+    user_id: string;
+    balance: number;
+    lifetime_purchased: number;
+    lifetime_spent: number;
+    created_at: string;
+    updated_at: string;
+}
+export interface CreditTransaction {
+    id: string;
+    user_id: string;
+    amount: number;
+    type: 'purchase' | 'message' | 'photo_unlock' | 'daily_bonus' | 'refund';
+    description: string | null;
+    reference_id: string | null;
+    created_at: string;
+}
+export interface PurchaseToken {
+    id: string;
+    user_id: string;
+    token: string;
+    expires_at: string;
+    used_at: string | null;
+    created_at: string;
+}
+export interface DailyMessages {
+    id: string;
+    user_id: string;
+    date: string;
+    message_count: number;
+}
+export interface UnlockedPhoto {
+    id: string;
+    user_id: string;
+    photo_id: string;
+    credits_spent: number;
+    unlocked_at: string;
+}
+export interface DailyNotification {
+    id: string;
+    user_id: string;
+    date: string;
+    message: string | null;
+    photo_id: string | null;
+    sent_at: string;
+}
+export interface CreditPurchase {
+    id: string;
+    user_id: string;
+    package_id: string;
+    token_id: string | null;
+    stripe_session_id: string | null;
+    stripe_payment_intent_id: string | null;
+    amount_cents: number;
+    credits: number;
+    status: 'pending' | 'completed' | 'failed' | 'refunded';
+    created_at: string;
+    completed_at: string | null;
+}
 //# sourceMappingURL=client.d.ts.map

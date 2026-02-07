@@ -1,21 +1,26 @@
 import { supabase } from '../db/client.js';
+// Session timeout in hours - messages older than this are not included in context
+const SESSION_TIMEOUT_HOURS = 4;
 export async function getConversationContext(userId) {
     // Get user's display name
     const { data: user } = await supabase
-        .from('users')
+        .from('nacho_users')
         .select('display_name')
         .eq('id', userId)
         .single();
-    // Get recent messages (last 30)
+    // Calculate session cutoff time (4 hours ago)
+    const sessionCutoff = new Date(Date.now() - SESSION_TIMEOUT_HOURS * 60 * 60 * 1000).toISOString();
+    // Get recent messages from current session only
     const { data: messages } = await supabase
-        .from('messages')
+        .from('nacho_messages')
         .select('*')
         .eq('user_id', userId)
+        .gte('created_at', sessionCutoff)
         .order('created_at', { ascending: true })
         .limit(30);
-    // Get user memories
+    // Get user memories (these persist across sessions)
     const { data: memories } = await supabase
-        .from('user_memories')
+        .from('nacho_user_memories')
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
@@ -28,7 +33,7 @@ export async function getConversationContext(userId) {
 }
 export async function updateConversationState(userId, updates) {
     const { error } = await supabase
-        .from('conversation_state')
+        .from('nacho_conversation_state')
         .update(updates)
         .eq('user_id', userId);
     if (error) {
@@ -38,7 +43,7 @@ export async function updateConversationState(userId, updates) {
 }
 export async function getConversationState(userId) {
     const { data } = await supabase
-        .from('conversation_state')
+        .from('nacho_conversation_state')
         .select('*')
         .eq('user_id', userId)
         .single();
@@ -47,7 +52,7 @@ export async function getConversationState(userId) {
 export async function clearConversationHistory(userId) {
     // Delete old messages (keep last 5)
     const { data: recentMessages } = await supabase
-        .from('messages')
+        .from('nacho_messages')
         .select('id')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
@@ -55,7 +60,7 @@ export async function clearConversationHistory(userId) {
     const keepIds = recentMessages?.map(m => m.id) || [];
     if (keepIds.length > 0) {
         await supabase
-            .from('messages')
+            .from('nacho_messages')
             .delete()
             .eq('user_id', userId)
             .not('id', 'in', `(${keepIds.join(',')})`);

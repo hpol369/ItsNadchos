@@ -18,7 +18,7 @@ export async function shouldShowUpsell(userId, totalMessages, state) {
     }
     // Check what packs user already owns
     const { data: purchases } = await supabase
-        .from('purchases')
+        .from('nacho_purchases')
         .select('pack_id')
         .eq('user_id', userId)
         .eq('status', 'completed');
@@ -35,7 +35,7 @@ export async function shouldShowUpsell(userId, totalMessages, state) {
     if (ownedPacks.has('tier1')) {
         // Tier 2 upsell: 40+ total messages, 3+ days since first message
         const { data: user } = await supabase
-            .from('users')
+            .from('nacho_users')
             .select('created_at')
             .eq('id', userId)
             .single();

@@ -9,7 +9,7 @@ export async function handlePreCheckoutQuery(ctx) {
     try {
         // Get user
         const { data: user } = await supabase
-            .from('users')
+            .from('nacho_users')
             .select('id, is_blocked')
             .eq('telegram_id', preCheckoutQuery.from.id)
             .single();
@@ -20,7 +20,7 @@ export async function handlePreCheckoutQuery(ctx) {
         // Verify the pack exists and is active
         const packId = preCheckoutQuery.invoice_payload;
         const { data: pack } = await supabase
-            .from('photo_packs')
+            .from('nacho_photo_packs')
             .select('*')
             .eq('id', packId)
             .eq('is_active', true)
@@ -31,7 +31,7 @@ export async function handlePreCheckoutQuery(ctx) {
         }
         // Check if user already owns this pack
         const { data: existingPurchase } = await supabase
-            .from('purchases')
+            .from('nacho_purchases')
             .select('id')
             .eq('user_id', user.id)
             .eq('pack_id', packId)
@@ -57,7 +57,7 @@ export async function handleSuccessfulPayment(ctx) {
     try {
         // Get user
         const { data: user } = await supabase
-            .from('users')
+            .from('nacho_users')
             .select('id')
             .eq('telegram_id', telegramUser.id)
             .single();
@@ -68,7 +68,7 @@ export async function handleSuccessfulPayment(ctx) {
         const packId = payment.invoice_payload;
         // Record the purchase
         const { data: purchase, error: purchaseError } = await supabase
-            .from('purchases')
+            .from('nacho_purchases')
             .insert({
             user_id: user.id,
             pack_id: packId,
