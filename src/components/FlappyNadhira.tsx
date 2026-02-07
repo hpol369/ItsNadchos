@@ -76,10 +76,8 @@ export default function FlappyNadhira() {
             // --- UPDATE ---
             frameRef.current++;
 
-            // Bird Physics (no gravity before first pipe - let player get used to controls)
-            if (frameRef.current > FIRST_PIPE_DELAY - 30) {
-                birdRef.current.velocity += GRAVITY;
-            }
+            // Bird Physics
+            birdRef.current.velocity += GRAVITY;
             birdRef.current.y += birdRef.current.velocity;
 
             // Pipe Spawning (delay first pipe for easier start)
