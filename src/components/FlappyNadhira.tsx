@@ -36,7 +36,7 @@ export default function FlappyNadhira() {
     useEffect(() => {
 
         const img = new Image();
-        img.src = "/Nadhira5.jpg";
+        img.src = "/Nadchos3.jpg";
         img.onload = () => { birdImgRef.current = img; };
 
         // Handle high-DPI scaling
