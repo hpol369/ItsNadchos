@@ -1,0 +1,228 @@
+/* Blackjack.module.css */
+
+.table {
+    background: #2E7D32;
+    /* Classic Green Felt */
+    /* Or use pink: background: #e84a7f; */
+    border-radius: 20px;
+    padding: 2rem;
+    position: relative;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.2);
+    color: white;
+    border: 8px solid #1B5E20;
+}
+
+.dealerArea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dealerAvatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid white;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.dealerBubble {
+    background: white;
+    color: #333;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-weight: 600;
+    position: relative;
+    animation: popIn 0.3s ease;
+    max-width: 200px;
+    text-align: center;
+}
+
+.dealerBubble::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px 6px 0;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+}
+
+.cardsContainer {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 0.5rem;
+    min-height: 100px;
+}
+
+.card {
+    width: 70px;
+    height: 100px;
+    background: white;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-weight: bold;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: slideIn 0.3s ease;
+}
+
+.cardRed {
+    color: #e53935;
+}
+
+.cardBlack {
+    color: #333;
+}
+
+.cardBack {
+    background: repeating-linear-gradient(45deg,
+            #b71c1c,
+            #b71c1c 10px,
+            #c62828 10px,
+            #c62828 20px);
+    border: 2px solid white;
+}
+
+.playerArea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.score {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.btnAction {
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.btnHit {
+    background: #4CAF50;
+    color: white;
+}
+
+.btnHit:hover {
+    background: #43A047;
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.btnStand {
+    background: #f44336;
+    color: white;
+}
+
+.btnStand:hover {
+    background: #e53935;
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.btnNew {
+    background: #2196F3;
+    color: white;
+}
+
+.resultOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    z-index: 20;
+    animation: fadeIn 0.3s ease;
+}
+
+.resultTitle {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.win {
+    color: #4CAF50;
+}
+
+.lose {
+    color: #f44336;
+}
+
+.push {
+    color: #FFC107;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

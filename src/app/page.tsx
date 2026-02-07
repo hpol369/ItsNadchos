@@ -7,7 +7,7 @@ import { FaInstagram, FaTiktok, FaTelegram, FaDiscord, FaTwitch } from "react-ic
 import { SiKick } from "react-icons/si";
 import confetti from "canvas-confetti";
 import styles from "./page.module.css";
-import FlappyNadhira from "@/components/FlappyNadhira";
+import GameHub from "@/components/GameHub";
 
 export default function Home() {
   const [score, setScore] = useState(0);
@@ -201,8 +201,8 @@ export default function Home() {
 
       {/* GAME SECTION */}
       <section className={styles.gameSection}>
-        <h2 className={styles.sectionTitle}>Can you beat the high score?</h2>
-        <FlappyNadhira />
+        <h2 className={styles.sectionTitle}>Nadhira Arcade</h2>
+        <GameHub />
       </section>
 
       {/* FOOTER */}

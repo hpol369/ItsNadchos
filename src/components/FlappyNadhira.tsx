@@ -8,7 +8,13 @@ export default function FlappyNadhira() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [gameState, setGameState] = useState<"START" | "PLAYING" | "GAME_OVER">("START");
     const [score, setScore] = useState(0);
-    const [highScore, setHighScore] = useState(0);
+    const [highScore, setHighScore] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem("flappyNadhiraHighScore");
+            return saved ? parseInt(saved) : 0;
+        }
+        return 0;
+    });
 
     // Physics Constants - tuned for 60fps reference
     // These value are multiplied by delta (1.0 at 60fps)
@@ -26,10 +32,8 @@ export default function FlappyNadhira() {
     const animationRef = useRef<number>(0);
     const birdImgRef = useRef<HTMLImageElement | null>(null);
 
-    // Load assets & high score
+    // Load assets
     useEffect(() => {
-        const saved = localStorage.getItem("flappyNadhiraHighScore");
-        if (saved) setHighScore(parseInt(saved));
 
         const img = new Image();
         img.src = "/Nadhira5.jpg";
@@ -76,7 +80,7 @@ export default function FlappyNadhira() {
         if (gameState === "PLAYING") {
             birdRef.current.velocity = JUMP;
         }
-    }, [gameState]);
+    }, [gameState, JUMP]);
 
     const gameOver = useCallback(() => {
         setGameState("GAME_OVER");
